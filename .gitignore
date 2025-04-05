@@ -1,0 +1,65 @@
+# Fichiers temporaires
+*.tmp
+*.bak
+*.swp
+*~
+
+# Logs
+logs/
+*.log
+airflow/logs/
+*.log.gz
+
+# Environnements Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Dépendances Node.js
+node_modules/
+npm-debug.log
+package-lock.json
+
+# Fichiers de configuration IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Fichiers de système
+.DS_Store
+Thumbs.db
+
+# Fichiers de build et de compilation
+build/
+dist/
+*.jar
+*.class
+
+# Fichiers de données volumineux
+*.xlsx
+*.xls
+*.csv
+*.zip
+*.tar
+*.gz
+
+# Fichiers sensibles
+*.env
+*.secret
+credentials.json
+
+# Fichiers spécifiques à Talend
+talend/jobs/*/lib/
+talend/jobs/*/contexts/
+
+# Fichiers Docker
+.docker/
+docker-compose.override.yml
+
+# Fichiers Airflow spécifiques
+airflow/logs/
+airflow/airflow.cfg
+airflow/unittests.cfg
