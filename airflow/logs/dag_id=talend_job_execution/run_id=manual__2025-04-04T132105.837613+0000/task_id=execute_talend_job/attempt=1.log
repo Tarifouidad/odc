@@ -1,0 +1,22 @@
+[2025-04-04T13:21:08.297+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-04-04T13:21:08.330+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: talend_job_execution.execute_talend_job manual__2025-04-04T13:21:05.837613+00:00 [queued]>
+[2025-04-04T13:21:08.345+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: talend_job_execution.execute_talend_job manual__2025-04-04T13:21:05.837613+00:00 [queued]>
+[2025-04-04T13:21:08.346+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 2
+[2025-04-04T13:21:08.369+0000] {taskinstance.py:2890} INFO - Executing <Task(BashOperator): execute_talend_job> on 2025-04-04 13:21:05.837613+00:00
+[2025-04-04T13:21:08.380+0000] {logging_mixin.py:190} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:70 DeprecationWarning: This process (pid=531) is multi-threaded, use of fork() may lead to deadlocks in the child.
+[2025-04-04T13:21:08.379+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'talend_job_execution', 'execute_talend_job', 'manual__2025-04-04T13:21:05.837613+00:00', '--job-id', '479', '--raw', '--subdir', 'DAGS_FOLDER/test.py', '--cfg-path', '/tmp/tmpqnpkhmc2']
+[2025-04-04T13:21:08.382+0000] {standard_task_runner.py:72} INFO - Started process 532 to run task
+[2025-04-04T13:21:08.382+0000] {standard_task_runner.py:105} INFO - Job 479: Subtask execute_talend_job
+[2025-04-04T13:21:08.403+0000] {logging_mixin.py:190} WARNING - /home/***/.local/lib/python3.12/site-packages/***/settings.py:209 DeprecationWarning: The sql_alchemy_conn option in [core] has been moved to the sql_alchemy_conn option in [database] - the old setting has been used, but please update your config.
+[2025-04-04T13:21:08.445+0000] {task_command.py:467} INFO - Running <TaskInstance: talend_job_execution.execute_talend_job manual__2025-04-04T13:21:05.837613+00:00 [running]> on host 98a2ddb84e26
+[2025-04-04T13:21:08.573+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='talend_job_execution' AIRFLOW_CTX_TASK_ID='execute_talend_job' AIRFLOW_CTX_EXECUTION_DATE='2025-04-04T13:21:05.837613+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-04-04T13:21:05.837613+00:00'
+[2025-04-04T13:21:08.574+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-04-04T13:21:08.594+0000] {subprocess.py:78} INFO - Tmp dir root location: /tmp
+[2025-04-04T13:21:08.596+0000] {subprocess.py:88} INFO - Running command: ['/usr/bin/bash', '-c', '\n        docker exec talend-jobs bash -c "cd /jobs/CorrigeAge/CorrigeAge && chmod +x ./CorrigeAge_run.sh && ./CorrigeAge_run.sh > /jobs/CorrigeAge/job_output.log 2>&1"\n        ']
+[2025-04-04T13:21:08.610+0000] {subprocess.py:99} INFO - Output:
+[2025-04-04T13:21:19.063+0000] {subprocess.py:110} INFO - Command exited with return code 0
+[2025-04-04T13:21:19.099+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-04-04T13:21:19.100+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=talend_job_execution, task_id=execute_talend_job, run_id=manual__2025-04-04T13:21:05.837613+00:00, execution_date=20250404T132105, start_date=20250404T132108, end_date=20250404T132119
+[2025-04-04T13:21:19.182+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-04-04T13:21:19.219+0000] {taskinstance.py:3901} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2025-04-04T13:21:19.222+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

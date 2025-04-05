@@ -1,0 +1,26 @@
+[2025-04-04T13:13:58.978+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2025-04-04T13:13:59.034+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: talend_job_execution.check_job_results manual__2025-04-04T13:13:45.142919+00:00 [queued]>
+[2025-04-04T13:13:59.062+0000] {taskinstance.py:2614} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: talend_job_execution.check_job_results manual__2025-04-04T13:13:45.142919+00:00 [queued]>
+[2025-04-04T13:13:59.064+0000] {taskinstance.py:2867} INFO - Starting attempt 1 of 2
+[2025-04-04T13:13:59.095+0000] {taskinstance.py:2890} INFO - Executing <Task(BashOperator): check_job_results> on 2025-04-04 13:13:45.142919+00:00
+[2025-04-04T13:13:59.108+0000] {logging_mixin.py:190} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:70 DeprecationWarning: This process (pid=296) is multi-threaded, use of fork() may lead to deadlocks in the child.
+[2025-04-04T13:13:59.107+0000] {standard_task_runner.py:104} INFO - Running: ['***', 'tasks', 'run', 'talend_job_execution', 'check_job_results', 'manual__2025-04-04T13:13:45.142919+00:00', '--job-id', '477', '--raw', '--subdir', 'DAGS_FOLDER/test.py', '--cfg-path', '/tmp/tmporeuiccj']
+[2025-04-04T13:13:59.111+0000] {standard_task_runner.py:72} INFO - Started process 297 to run task
+[2025-04-04T13:13:59.111+0000] {standard_task_runner.py:105} INFO - Job 477: Subtask check_job_results
+[2025-04-04T13:13:59.141+0000] {logging_mixin.py:190} WARNING - /home/***/.local/lib/python3.12/site-packages/***/settings.py:209 DeprecationWarning: The sql_alchemy_conn option in [core] has been moved to the sql_alchemy_conn option in [database] - the old setting has been used, but please update your config.
+[2025-04-04T13:13:59.198+0000] {task_command.py:467} INFO - Running <TaskInstance: talend_job_execution.check_job_results manual__2025-04-04T13:13:45.142919+00:00 [running]> on host 98a2ddb84e26
+[2025-04-04T13:13:59.329+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='talend_job_execution' AIRFLOW_CTX_TASK_ID='check_job_results' AIRFLOW_CTX_EXECUTION_DATE='2025-04-04T13:13:45.142919+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-04-04T13:13:45.142919+00:00'
+[2025-04-04T13:13:59.330+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2025-04-04T13:13:59.353+0000] {subprocess.py:78} INFO - Tmp dir root location: /tmp
+[2025-04-04T13:13:59.355+0000] {subprocess.py:88} INFO - Running command: ['/usr/bin/bash', '-c', '\n        echo "Job Talend terminé - Vérification des résultats"\n        if [ -f /opt/***/talend_jobs/CorrigeAge/job_output.log ]; then\n            echo "Résumé du job :"\n            grep -A 5 "Code de sortie" /opt/***/talend_jobs/CorrigeAge/job_output.log || echo "Informations de sortie non trouvées"\n        else\n            echo "Fichier de log non trouvé. Vérifiez le conteneur talend-jobs directement."\n        fi\n        ']
+[2025-04-04T13:13:59.370+0000] {subprocess.py:99} INFO - Output:
+[2025-04-04T13:13:59.374+0000] {subprocess.py:106} INFO - Job Talend terminé - Vérification des résultats
+[2025-04-04T13:13:59.377+0000] {subprocess.py:106} INFO - Résumé du job :
+[2025-04-04T13:13:59.390+0000] {subprocess.py:106} INFO - Code de sortie : 0
+[2025-04-04T13:13:59.391+0000] {subprocess.py:106} INFO - ========================================================
+[2025-04-04T13:13:59.392+0000] {subprocess.py:110} INFO - Command exited with return code 0
+[2025-04-04T13:13:59.431+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2025-04-04T13:13:59.432+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=talend_job_execution, task_id=check_job_results, run_id=manual__2025-04-04T13:13:45.142919+00:00, execution_date=20250404T131345, start_date=20250404T131359, end_date=20250404T131359
+[2025-04-04T13:13:59.489+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2025-04-04T13:13:59.509+0000] {taskinstance.py:3901} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-04-04T13:13:59.514+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

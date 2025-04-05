@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<talendfile:ProcessType xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TalendMapper="http://www.talend.org/mapper" xmlns:talendfile="platform:/resource/org.talend.model/model/TalendFile.xsd" defaultContext="Default" jobType="Standard">
+  <context confirmationNeeded="false" name="Default"/>
+  <parameters>
+    <elementParameter field="CLOSED_LIST" name="LOG4J_RUN_LEVEL" value="Info" show="false"/>
+    <elementParameter field="TEXT" name="SCREEN_OFFSET_X" value="0" show="false"/>
+    <elementParameter field="TEXT" name="SCREEN_OFFSET_Y" value="0" show="false"/>
+    <elementParameter field="TEXT" name="REPOSITORY_CONNECTION_ID" value="" show="false"/>
+    <elementParameter field="TEXT" name="OOZIE_PROPERTY_TYPENAME" value="" show="false"/>
+    <elementParameter field="TEXT" name="OOZIE_HADOOP_DISTRIBUTION" value="" show="false"/>
+    <elementParameter field="TEXT" name="OOZIE_HADOOP_VERSION" value="" show="false"/>
+    <elementParameter field="TEXT" name="OOZIE_ENABLE_KERBEROS" value="" show="false"/>
+    <elementParameter field="TEXT" name="OOZIE_NAME_NODE_PRINCIPAL" value="" show="false"/>
+    <elementParameter field="TEXT" name="OOZIE_USERNAME" value="" show="false"/>
+    <elementParameter field="TEXT" name="OOZIE_GROUP" value="" show="false"/>
+    <elementParameter field="TEXT" name="OOZIE_USE_KEYTAB" value="" show="false"/>
+    <elementParameter field="TEXT" name="OOZIE_KT_PRINCIPAL" value="" show="false"/>
+    <elementParameter field="TEXT" name="OOZIE_KEY_TAB" value="" show="false"/>
+    <elementParameter field="TEXT" name="OOZIE_ENABLE_OO_KERBEROS" value="" show="false"/>
+    <elementParameter field="TEXT" name="OOZIE_NAME_NODE_END_POINT" value="" show="false"/>
+    <elementParameter field="TEXT" name="OOZIE_JOB_TRACKER_ENDPOINT" value="" show="false"/>
+    <elementParameter field="TEXT" name="OOZIE_END_POINT" value="" show="false"/>
+    <elementParameter field="CHECK" name="IMPLICITCONTEXT_USE_PROJECT_SETTINGS" value="true" show="false"/>
+    <elementParameter field="CHECK" name="STATANDLOG_USE_PROJECT_SETTINGS" value="true" show="false"/>
+    <elementParameter field="CHECK" name="MULTI_THREAD_EXECATION" value="false"/>
+    <elementParameter field="CHECK" name="IMPLICIT_TCONTEXTLOAD" value="false"/>
+    <elementParameter field="RADIO" name="FROM_FILE_FLAG_IMPLICIT_CONTEXT" value="false" show="false"/>
+    <elementParameter field="RADIO" name="FROM_DATABASE_FLAG_IMPLICIT_CONTEXT" value="false" show="false"/>
+    <elementParameter field="FILE" name="IMPLICIT_TCONTEXTLOAD_FILE" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="FIELDSEPARATOR" value="&quot;&quot;" show="false"/>
+    <elementParameter field="CHECK" name="OVERRIDE_ENCODING_FLAG" value="false" show="false"/>
+    <elementParameter field="ENCODING_TYPE" name="OVERRIDE_ENCODING_IN_EXTRA" value="ISO-8859-15" show="false"/>
+    <elementParameter field="TECHNICAL" name="OVERRIDE_ENCODING_IN_EXTRA:ENCODING_TYPE" value="ISO-8859-15" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="DB_TYPE_IMPLICIT_CONTEXT" value="" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="DB_VERSION_IMPLICIT_CONTEXT" value="" show="false"/>
+    <elementParameter field="TEXT" name="URL_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TABLE" name="DRIVER_JAR_IMPLICIT_CONTEXT" show="false"/>
+    <elementParameter field="TEXT" name="DRIVER_CLASS_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="HOST_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="PORT_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="DBNAME_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="LOCAL_SERVICE_NAME_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="PROPERTIES_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="SCHEMA_DB_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="USER_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="PASSWORD" name="PASS_IMPLICIT_CONTEXT" value="enc:system.encryption.key.v1:bV3X/08UmhKBA1fMAJGPxOrx43RSt91BFSOUJDv5" show="false"/>
+    <elementParameter field="FILE" name="DBFILE_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="DBTABLE" name="DBTABLE_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="QUERY_CONDITION_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="LOAD_NEW_VARIABLE" value="Warning" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="NOT_LOAD_OLD_VARIABLE" value="Warning" show="false"/>
+    <elementParameter field="CHECK" name="PRINT_OPERATIONS" value="false" show="false"/>
+    <elementParameter field="CHECK" name="DISABLE_ERROR" value="false" show="false"/>
+    <elementParameter field="CHECK" name="DISABLE_WARNINGS" value="false" show="false"/>
+    <elementParameter field="CHECK" name="DISABLE_INFO" value="false" show="false"/>
+    <elementParameter field="CHECK" name="ON_STATCATCHER_FLAG" value="false"/>
+    <elementParameter field="CHECK" name="ON_LOGCATCHER_FLAG" value="false"/>
+    <elementParameter field="CHECK" name="ON_METERCATCHER_FLAG" value="false"/>
+    <elementParameter field="CHECK" name="ON_CONSOLE_FLAG" value="false" show="false"/>
+    <elementParameter field="CHECK" name="ON_FILES_FLAG" value="false" show="false"/>
+    <elementParameter field="DIRECTORY" name="FILE_PATH" value="&quot;C:/Program Files (x86)/TOS_DI-8.0.1/studio/workspace/.metadata&quot;" show="false"/>
+    <elementParameter field="TEXT" name="FILENAME_STATS" value="&quot;stats_file.txt&quot;" show="false"/>
+    <elementParameter field="TEXT" name="FILENAME_LOGS" value="&quot;logs_file.txt&quot;" show="false"/>
+    <elementParameter field="TEXT" name="FILENAME_METTER" value="&quot;meter_file.txt&quot;" show="false"/>
+    <elementParameter field="ENCODING_TYPE" name="ENCODING" value="ISO-8859-15" show="false"/>
+    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="ISO-8859-15" show="false"/>
+    <elementParameter field="CHECK" name="ON_DATABASE_FLAG" value="false" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="DB_TYPE" value="tJDBCOutput" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="DB_VERSION" value="ORACLE_12" show="false"/>
+    <elementParameter field="TEXT" name="URL" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TABLE" name="DRIVER_JAR" show="false"/>
+    <elementParameter field="TEXT" name="DRIVER_CLASS" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="HOST" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="PORT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="DATASOURCE" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="DBNAME" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="LOCAL_SERVICE_NAME" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="PROPERTIES" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="SCHEMA_DB" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="USER" value="&quot;&quot;" show="false"/>
+    <elementParameter field="PASSWORD" name="PASS" value="enc:system.encryption.key.v1:weUcrzXJ5bMvD7HZh/DT26bjMlahM6b5BHEtKBx/" show="false"/>
+    <elementParameter field="FILE" name="DBFILE" value="&quot;&quot;" show="false"/>
+    <elementParameter field="DBTABLE" name="TABLE_STATS" value="&quot;&quot;" show="false"/>
+    <elementParameter field="DBTABLE" name="TABLE_LOGS" value="&quot;&quot;" show="false"/>
+    <elementParameter field="DBTABLE" name="TABLE_METER" value="&quot;&quot;" show="false"/>
+    <elementParameter field="CHECK" name="CATCH_RUNTIME_ERRORS" value="true" show="false"/>
+    <elementParameter field="CHECK" name="CATCH_USER_ERRORS" value="true" show="false"/>
+    <elementParameter field="CHECK" name="CATCH_USER_WARNING" value="true" show="false"/>
+    <elementParameter field="CHECK" name="CATCH_REALTIME_STATS" value="false" show="false"/>
+    <elementParameter field="TEXT" name="HEADERFOOTER_HEADERID" value="" show="false"/>
+    <elementParameter field="CHECK" name="HEADER_ENABLED" value="false" show="false"/>
+    <elementParameter field="TEXT" name="HEADER_LIBRARY" value="" show="false"/>
+    <elementParameter field="TEXT" name="HEADER_CODE" value="" show="false"/>
+    <elementParameter field="TEXT" name="HEADER_IMPORT" value="" show="false"/>
+    <elementParameter field="TEXT" name="HEADERFOOTER_FOOTERID" value="" show="false"/>
+    <elementParameter field="CHECK" name="FOOTER_ENABLED" value="false" show="false"/>
+    <elementParameter field="TEXT" name="FOOTER_LIBRARY" value="" show="false"/>
+    <elementParameter field="TEXT" name="FOOTER_CODE" value="" show="false"/>
+    <elementParameter field="TEXT" name="FOOTER_IMPORT" value="" show="false"/>
+    <routinesParameter id="_MRG8oO1PEe-sKvd3Ed2jrA" name="DataOperation"/>
+    <routinesParameter id="_MRunsO1PEe-sKvd3Ed2jrA" name="Mathematical"/>
+    <routinesParameter id="_MR0HQO1PEe-sKvd3Ed2jrA" name="Numeric"/>
+    <routinesParameter id="_MR4YsO1PEe-sKvd3Ed2jrA" name="Relational"/>
+    <routinesParameter id="_MR9RMO1PEe-sKvd3Ed2jrA" name="StringHandling"/>
+    <routinesParameter id="_MSBioO1PEe-sKvd3Ed2jrA" name="TalendDataGenerator"/>
+    <routinesParameter id="_MSF0EO1PEe-sKvd3Ed2jrA" name="TalendDate"/>
+    <routinesParameter id="_MSOW8O1PEe-sKvd3Ed2jrA" name="TalendStringUtil"/>
+    <routinesParameter id="_MSKFgO1PEe-sKvd3Ed2jrA" name="TalendString"/>
+  </parameters>
+  <node componentName="tRunJob" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="224" posY="128">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tRunJob_1" show="false"/>
+    <elementParameter field="CHECK" name="USE_DYNAMIC_JOB" value="false"/>
+    <elementParameter field="TEXT" name="CONTEXT_JOB" value="" show="false"/>
+    <elementParameter field="PROCESS_TYPE" name="PROCESS" value="encodage"/>
+    <elementParameter field="TECHNICAL" name="PROCESS:PROCESS_TYPE_CONTEXT" value="Default"/>
+    <elementParameter field="TECHNICAL" name="PROCESS:PROCESS_TYPE_PROCESS" value="LOCAL_PROJECT:_zXgw0PQoEe-MCsDstVN70Q"/>
+    <elementParameter field="TECHNICAL" name="PROCESS:PROCESS_TYPE_VERSION" value="Latest"/>
+    <elementParameter field="TEXT" name="CONTEXT_NAME" value="Default" show="false"/>
+    <elementParameter field="CHECK" name="USE_INDEPENDENT_PROCESS" value="false"/>
+    <elementParameter field="CHECK" name="DIE_ON_CHILD_ERROR" value="true"/>
+    <elementParameter field="CHECK" name="TRANSMIT_WHOLE_CONTEXT" value="true"/>
+    <elementParameter field="TABLE" name="CONTEXTPARAMS"/>
+    <elementParameter field="CHECK" name="PROPAGATE_CHILD_RESULT" value="true"/>
+    <elementParameter field="CHECK" name="PRINT_PARAMETER" value="false"/>
+    <elementParameter field="CHECK" name="TRANSMIT_ORIGINAL_CONTEXT" value="true" show="false"/>
+    <elementParameter field="RADIO" name="USE_CHILD_JVM_SETTING" value="true" show="false"/>
+    <elementParameter field="RADIO" name="USE_CUSTOM_JVM_SETTING" value="false" show="false"/>
+    <elementParameter field="TABLE" name="JVM_ARGUMENTS" show="false"/>
+    <elementParameter field="CHECK" name="USE_DYNAMIC_CONTEXT" value="false"/>
+    <elementParameter field="TEXT" name="DYNAMIC_CONTEXT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="CHECK" name="USE_EXTRA_CLASSPATH" value="false" show="false"/>
+    <elementParameter field="TEXT" name="EXTRA_CLASSPATH" value="&quot;&quot;" show="false"/>
+    <elementParameter field="TEXT" name="LABEL" value="__PROCESS__"/>
+    <elementParameter field="TEXT" name="HINT" value="&lt;b>__UNIQUE_NAME__&lt;/b>&lt;br>__COMMENT__"/>
+    <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <metadata connector="FLOW" name="tRunJob_1">
+      <column comment="" key="false" length="4" name="Annee" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Integer" usefulColumn="true"/>
+      <column comment="" key="false" length="13" name="EDC_FabLab" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="54" name="FORMATION" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="32" name="DATE" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="20" name="ETAT" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="20" name="Profil_recommande_pour_Job_Dating" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="33" name="EMAIL" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="15" name="First_Name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="12" name="Last_Name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="5" name="gender" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="26" name="profession" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="15" name="Votre_numero_de_telephone" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="29" name="birthDay" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="country" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Nom_Prenom" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="2" name="Votre_Age" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="13" name="Categorie_d_age" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="7" name="Votre_niveau_d_etudes" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="52" name="Votre_specialite" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="65" name="Etablissement" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="21" name="Avez_Vous_deja_participer_au_programmes_ODC" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="152" name="linkedIn" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="userCV" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column23" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column24" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column25" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column26" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column27" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column28" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column29" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column30" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column31" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column32" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column33" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column34" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column35" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column36" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column37" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column38" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column39" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column40" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column41" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column42" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column43" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column44" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="-1" name="correctedEmail" nullable="true" pattern="" precision="-1" sourceType="" type="id_String" originalLength="33" usefulColumn="true"/>
+    </metadata>
+  </node>
+  <node componentName="tJavaRow" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="640" posY="128" sizeX="192" sizeY="32">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tJavaRow_1" show="false"/>
+    <elementParameter field="MEMO_JAVA" name="CODE" value="//Code généré selon les schémas d'entrée et de sortie&#xD;&#xA;output_row.Annee = input_row.Annee;&#xD;&#xA;output_row.EDC_FabLab = input_row.EDC_FabLab;&#xD;&#xA;output_row.FORMATION = input_row.FORMATION;&#xD;&#xA;output_row.DATE = input_row.DATE;&#xD;&#xA;output_row.ETAT = input_row.ETAT;&#xD;&#xA;output_row.Profil_recommande_pour_Job_Dating = input_row.Profil_recommande_pour_Job_Dating;&#xD;&#xA;output_row.EMAIL = input_row.EMAIL;&#xD;&#xA;output_row.First_Name = input_row.First_Name;&#xD;&#xA;output_row.Last_Name = input_row.Last_Name;&#xD;&#xA;output_row.gender = input_row.gender;&#xD;&#xA;output_row.profession = input_row.profession;&#xD;&#xA;output_row.Votre_numero_de_telephone = input_row.Votre_numero_de_telephone;&#xD;&#xA;output_row.birthDay = input_row.birthDay;&#xD;&#xA;output_row.country = input_row.country;&#xD;&#xA;output_row.Nom_Prenom = input_row.Nom_Prenom;&#xD;&#xA;output_row.Votre_Age = input_row.Votre_Age;&#xD;&#xA;output_row.Categorie_d_age = input_row.Categorie_d_age;&#xD;&#xA;output_row.Votre_niveau_d_etudes = input_row.Votre_niveau_d_etudes;&#xD;&#xA;output_row.Votre_specialite = input_row.Votre_specialite;&#xD;&#xA;output_row.Etablissement = input_row.Etablissement;&#xD;&#xA;output_row.Avez_Vous_deja_participer_au_programmes_ODC = input_row.Avez_Vous_deja_participer_au_programmes_ODC;&#xD;&#xA;output_row.linkedIn = input_row.linkedIn;&#xD;&#xA;output_row.userCV = input_row.userCV;&#xD;&#xA;&#xD;&#xA;// Code pour tJavaRow - Correction automatique des domaines d'email&#xA;String email = input_row.EMAIL;&#xA;String correctedEmail = email;&#xA;&#xA;if (email != null &amp;&amp; email.contains(&quot;@&quot;)) {&#xA;    // Extraction du nom d'utilisateur et du domaine&#xA;    String[] parts = email.split(&quot;@&quot;);&#xA;    String username = parts[0];&#xA;    String domain = parts[1].toLowerCase();&#xA;    &#xA;    // Table de correspondance des domaines incorrects vers corrects&#xA;    java.util.Map&lt;String, String> domainCorrections = new java.util.HashMap&lt;String, String>();&#xA;    domainCorrections.put(&quot;gmal.com&quot;, &quot;gmail.com&quot;);&#xA;    domainCorrections.put(&quot;gmil.com&quot;, &quot;gmail.com&quot;);&#xA;    domainCorrections.put(&quot;gmail.co&quot;, &quot;gmail.com&quot;);&#xA;    domainCorrections.put(&quot;gmail.cm&quot;, &quot;gmail.com&quot;);&#xA;    domainCorrections.put(&quot;gmai.com&quot;, &quot;gmail.com&quot;);&#xA;    domainCorrections.put(&quot;hotmal.com&quot;, &quot;hotmail.com&quot;);&#xA;    domainCorrections.put(&quot;hotmal.fr&quot;, &quot;hotmail.fr&quot;);&#xA;    domainCorrections.put(&quot;hotmil.com&quot;, &quot;hotmail.com&quot;);&#xA;    domainCorrections.put(&quot;hotmial.com&quot;, &quot;hotmail.com&quot;);&#xA;    domainCorrections.put(&quot;yaho.com&quot;, &quot;yahoo.com&quot;);&#xA;    domainCorrections.put(&quot;yaho.fr&quot;, &quot;yahoo.fr&quot;);&#xA;    domainCorrections.put(&quot;yahou.com&quot;, &quot;yahoo.com&quot;);&#xA;    domainCorrections.put(&quot;yahou.fr&quot;, &quot;yahoo.fr&quot;);&#xA;    domainCorrections.put(&quot;outlook.co&quot;, &quot;outlook.com&quot;);&#xA;    domainCorrections.put(&quot;outlok.com&quot;, &quot;outlook.com&quot;);&#xA;    &#xA;    // Vérification et correction du domaine&#xA;    if (domainCorrections.containsKey(domain)) {&#xA;        String correctedDomain = domainCorrections.get(domain);&#xA;        correctedEmail = username + &quot;@&quot; + correctedDomain;&#xA;        System.out.println(&quot;Correction de domaine: &quot; + domain + &quot; -> &quot; + correctedDomain);&#xA;    }&#xA;}&#xA;&#xA;// Affecter l'email corrigé à la sortie&#xA;output_row.correctedEmail = correctedEmail;&#xA;&#xA;// Normalisation du numéro de téléphone&#xA;String phone = input_row.Votre_numero_de_telephone;  // Remplacer par le nom exact de la colonne&#xA;if (phone != null &amp;&amp; !phone.trim().isEmpty()) {&#xA;    phone = phone.trim();  // Supprimer les espaces avant et après&#xA;    phone = phone.replaceAll(&quot;[^0-9]&quot;, &quot;&quot;);  // Garder uniquement les chiffres&#xA;&#xA;&#xA;    // Garder les 9 derniers chiffres après +212&#xA;    if (phone.length() > 9) {&#xA;        phone = phone.substring(phone.length() - 9);  // Garder les 9 derniers chiffres&#xA;    }&#xA;&#xA;    output_row.Votre_numero_de_telephone = &quot;0&quot; + phone;  // Ajouter +212&#xA;} else {&#xA;    output_row.Votre_numero_de_telephone = &quot;&quot;;&#xA;}&#xA;&#xA;"/>
+    <elementParameter field="MEMO_IMPORT" name="IMPORT" value="//import java.util.List;&#xA;import java.util.Calendar;&#xA;import java.text.SimpleDateFormat;"/>
+    <elementParameter field="TEXT" name="LABEL" value="__UNIQUE_NAME__"/>
+    <elementParameter field="TEXT" name="HINT" value="&lt;b>__UNIQUE_NAME__&lt;/b>&lt;br>__COMMENT__"/>
+    <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <metadata connector="FLOW" name="tJavaRow_1">
+      <column comment="" key="false" length="4" name="Annee" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Integer" usefulColumn="true"/>
+      <column comment="" key="false" length="13" name="EDC_FabLab" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="54" name="FORMATION" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="32" name="DATE" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="20" name="ETAT" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="20" name="Profil_recommande_pour_Job_Dating" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="33" name="EMAIL" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="15" name="First_Name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="12" name="Last_Name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="5" name="gender" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="26" name="profession" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="15" name="Votre_numero_de_telephone" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="29" name="birthDay" nullable="true" pattern="&quot;dd/MM/yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="country" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Nom_Prenom" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="2" name="Votre_Age" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="13" name="Categorie_d_age" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="7" name="Votre_niveau_d_etudes" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="52" name="Votre_specialite" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="65" name="Etablissement" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="21" name="Avez_Vous_deja_participer_au_programmes_ODC" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="152" name="linkedIn" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="userCV" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column23" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column24" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column25" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column26" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column27" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column28" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column29" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column30" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column31" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column32" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column33" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column34" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column35" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column36" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column37" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column38" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column39" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column40" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column41" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column42" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column43" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Column44" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="-1" name="correctedEmail" nullable="true" pattern="" precision="-1" sourceType="" type="id_String" originalLength="33" usefulColumn="true"/>
+    </metadata>
+  </node>
+  <node componentName="tMap" componentVersion="2.1" offsetLabelX="0" offsetLabelY="0" posX="992" posY="128">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tMap_2" show="false"/>
+    <elementParameter field="EXTERNAL" name="MAP" value=""/>
+    <elementParameter field="CLOSED_LIST" name="LINK_STYLE" value="AUTO"/>
+    <elementParameter field="DIRECTORY" name="TEMPORARY_DATA_DIRECTORY" value=""/>
+    <elementParameter field="IMAGE" name="PREVIEW" value="_jjthUO7MEe-2iIvzaDvW3g-tMap_2-PREVIEW.bmp"/>
+    <elementParameter field="CHECK" name="DIE_ON_ERROR" value="true" show="false"/>
+    <elementParameter field="CHECK" name="LKUP_PARALLELIZE" value="false" show="false"/>
+    <elementParameter field="TEXT" name="LEVENSHTEIN" value="0" show="false"/>
+    <elementParameter field="TEXT" name="JACCARD" value="0" show="false"/>
+    <elementParameter field="CHECK" name="ENABLE_AUTO_CONVERT_TYPE" value="false" show="false"/>
+    <elementParameter field="TEXT" name="ROWS_BUFFER_SIZE" value="2000000"/>
+    <elementParameter field="CHECK" name="CHANGE_HASH_AND_EQUALS_FOR_BIGDECIMAL" value="true"/>
+    <elementParameter field="TEXT" name="LABEL" value="__UNIQUE_NAME__"/>
+    <elementParameter field="TEXT" name="HINT" value="&lt;b>__UNIQUE_NAME__&lt;/b>&lt;br>__COMMENT__"/>
+    <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <metadata connector="FLOW" name="out2">
+      <column comment="" key="false" length="4" name="Annee" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Integer" usefulColumn="true"/>
+      <column comment="" key="false" length="13" name="EDC_FabLab" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="54" name="FORMATION" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="32" name="DATE" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="20" name="ETAT" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="20" name="Profil_recommande_pour_Job_Dating" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="33" name="EMAIL" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="15" name="First_Name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="12" name="Last_Name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="5" name="gender" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="26" name="profession" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="15" name="Votre_numero_de_telephone" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="29" name="birthDay" nullable="true" pattern="&quot;dd/MM/yyyy&quot;" precision="0" type="id_Date" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="country" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Nom_Prenom" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="2" name="Votre_Age" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Integer" usefulColumn="true"/>
+      <column comment="" key="false" length="13" name="Categorie_d_age" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="7" name="Votre_niveau_d_etudes" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="52" name="Votre_specialite" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="65" name="Etablissement" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="21" name="Avez_Vous_deja_participer_au_programmes_ODC" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="152" name="linkedIn" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="userCV" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+    </metadata>
+    <nodeData xsi:type="TalendMapper:MapperData">
+      <uiProperties/>
+      <varTables sizeState="INTERMEDIATE" name="Var" minimized="true"/>
+      <outputTables sizeState="INTERMEDIATE" name="out2">
+        <mapperTableEntries name="Annee" expression="row3.Annee " type="id_Integer" nullable="true"/>
+        <mapperTableEntries name="EDC_FabLab" expression="row3.EDC_FabLab " type="id_String" nullable="true"/>
+        <mapperTableEntries name="FORMATION" expression="row3.FORMATION " type="id_String" nullable="true"/>
+        <mapperTableEntries name="DATE" expression="row3.DATE " type="id_String" nullable="true"/>
+        <mapperTableEntries name="ETAT" expression="row3.ETAT != null ? &#xD;&#xA;    (row3.ETAT.equals(&quot;Confirmé / Présent&quot;) ? &quot;Confirmé / Présent&quot; :&#xD;&#xA;    row3.ETAT.equals(&quot;Confirmé / Absent&quot;) ? &quot;Confirmé / Absent&quot; :&#xD;&#xA;    row3.ETAT.equals(&quot;Confirmé / Abandonné&quot;) || &#xD;&#xA;    row3.ETAT.equals(&quot;Présent / Abandonné&quot;) ||&#xD;&#xA;    row3.ETAT.equals(&quot;Confirmé / Abondonné&quot;) ? &quot;Confirmé / Abandonné&quot; :&#xD;&#xA;    row3.ETAT.equals(&quot;Absence justifiée&quot;) || &#xD;&#xA;    row3.ETAT.equals(&quot;Absent / Justifié&quot;) ? &quot;Absent / Justifié&quot; :&#xD;&#xA;    row3.ETAT.equals(&quot;No Confirme&quot;) || &#xD;&#xA;    row3.ETAT.equals(&quot;Non Confirme&quot;) ? &quot;Non Confirmé&quot; :&#xD;&#xA;    row3.ETAT.equals(&quot;Présent / Attention&quot;) ? &quot;Présent / Attention&quot; :&#xD;&#xA;    row3.ETAT) : &quot;Non Confirmé&quot; " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Profil_recommande_pour_Job_Dating" expression="row3.Profil_recommande_pour_Job_Dating " type="id_String" nullable="true"/>
+        <mapperTableEntries name="EMAIL" expression="row3.EMAIL " type="id_String" nullable="true"/>
+        <mapperTableEntries name="First_Name" expression="row3.First_Name " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Last_Name" expression="row3.Last_Name " type="id_String" nullable="true"/>
+        <mapperTableEntries name="gender" expression="row3.gender " type="id_String" nullable="true"/>
+        <mapperTableEntries name="profession" expression="(row3.profession == null) ? &quot;inconnu&quot; :&#xD;&#xA;  ((row3.profession.toLowerCase().trim().matches(&quot;.*sans emploi.*&quot;) || &#xD;&#xA;    row3.profession.toLowerCase().trim().matches(&quot;.*à la recherche .*&quot;) ||&#xD;&#xA;     row3.profession.toLowerCase().trim().matches(&quot;.*a la recherche .*&quot;) ||&#xD;&#xA;    row3.profession.toLowerCase().trim().matches(&quot;.*unemployed.*&quot;) ||&#xD;&#xA;    row3.profession.toLowerCase().trim().matches(&quot;.*looking for a job.*&quot;)) ? &quot;Sans Emploi&quot; :&#xD;&#xA;  ((row3.profession.toLowerCase().trim().matches(&quot;.*etudiant.*&quot;) || &#xD;&#xA;    row3.profession.toLowerCase().trim().matches(&quot;.*étudiant.*&quot;) || &#xD;&#xA;    row3.profession.toLowerCase().trim().matches(&quot;.*étudiant.e.*&quot;) || &#xD;&#xA;    row3.profession.toLowerCase().trim().matches(&quot;.*jeune diplômé.*&quot;) || &#xD;&#xA;    row3.profession.toLowerCase().trim().matches(&quot;.*jeune diplome.*&quot;) ||&#xD;&#xA;    row3.profession.toLowerCase().trim().matches(&quot;.*ingénieur .*&quot;) ||&#xD;&#xA;    row3.profession.toLowerCase().trim().matches(&quot;.*student.*&quot;) ||&#xD;&#xA;    row3.profession.toLowerCase().trim().matches(&quot;.*young graduate.*&quot;)) ? &quot;Etudiant&quot; :&#xD;&#xA;  ((row3.profession.toLowerCase().trim().matches(&quot;.*stagiaire.*&quot;) || &#xD;&#xA;    row3.profession.toLowerCase().trim().matches(&quot;.*intern.*&quot;)) ? &quot;Employe&quot; : &#xD;&#xA;  &quot;Autre&quot;))) " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_numero_de_telephone" expression="row3.Votre_numero_de_telephone " type="id_String" nullable="true"/>
+        <mapperTableEntries name="birthDay" expression="(&#xD;&#xA;    row3.birthDay != null &amp;&amp; row3.birthDay.matches(&quot;^\\d{5}$&quot;) ? &#xD;&#xA;        TalendDate.addDate(TalendDate.parseDate(&quot;yyyy-MM-dd&quot;, &quot;1899-12-30&quot;), Integer.parseInt(row3.birthDay), &quot;dd&quot;) :&#xD;&#xA;&#xD;&#xA;    row3.birthDay != null &amp;&amp; row3.birthDay.matches(&quot;^\\d{4}/\\d{2}/\\d{2}$&quot;) ? &#xD;&#xA;        TalendDate.parseDate(&quot;yyyy/MM/dd&quot;, row3.birthDay) :&#xD;&#xA;&#xD;&#xA;    row3.birthDay != null &amp;&amp; row3.birthDay.matches(&quot;^\\d{2}/\\d{2}/\\d{4}$&quot;) ? &#xD;&#xA;        TalendDate.parseDate(&quot;dd/MM/yyyy&quot;, row3.birthDay) :&#xD;&#xA;&#xD;&#xA;    row3.birthDay != null &amp;&amp; row3.birthDay.matches(&quot;^\\d{2}-\\d{2}-\\d{4}$&quot;) ? &#xD;&#xA;        TalendDate.parseDate(&quot;dd-MM-yyyy&quot;, row3.birthDay) :&#xD;&#xA;&#xD;&#xA;    row3.birthDay != null &amp;&amp; row3.birthDay.matches(&quot;^\\d{4}-\\d{2}-\\d{2}$&quot;) ? &#xD;&#xA;        TalendDate.parseDate(&quot;yyyy-MM-dd&quot;, row3.birthDay) :&#xD;&#xA;&#xD;&#xA;    row1.birthDay != null &amp;&amp; row1.birthDay.matches(&quot;^\\d{2}_\\d{2}_\\d{4}$&quot;) ? &#xD;&#xA;        TalendDate.parseDate(&quot;dd_MM_yyyy&quot;, row1.birthDay) :&#xD;&#xA;&#xD;&#xA;    row3.birthDay != null &amp;&amp; row1.birthDay.matches(&quot;^\\d{4}\\\\\\d{2}\\\\\\d{2}$&quot;) ? &#xD;&#xA;        TalendDate.parseDate(&quot;yyyy\\MM\\dd&quot;, row3.birthDay) :&#xD;&#xA;&#xD;&#xA;    null&#xD;&#xA;) " type="id_Date" nullable="true"/>
+        <mapperTableEntries name="country" expression="row3.country " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Nom_Prenom" expression="row3.Nom_Prenom = row3.First_Name + &quot; &quot; + row3.Last_Name " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_Age" expression="row3.Votre_Age != null &amp;&amp; row3.Votre_Age instanceof String &#xD;&#xA;    ? Integer.parseInt(((String) row3.Votre_Age).replaceAll(&quot;[^0-9]&quot;, &quot;&quot;)) &#xD;&#xA;    : null " type="id_Integer" nullable="true"/>
+        <mapperTableEntries name="Categorie_d_age" expression="row3.Categorie_d_age " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_niveau_d_etudes" expression="row3.Votre_niveau_d_etudes == null ? &quot;Sans Bac&quot; :&#xD;&#xA;(&#xD;&#xA;    // Classe &quot;Bac&quot; qui inclut &quot;Bac&quot; et &quot;Bac+1&quot;&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;bac&quot;) &amp;&amp;&#xD;&#xA;    !StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;bac+&quot;) ||&#xD;&#xA;StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;bac+1&quot;)||&#xD;&#xA;StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;1er&quot;)||&#xD;&#xA;StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;diplo&quot;)||&#xD;&#xA;StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;étudiant&quot;) ||&#xD;&#xA;StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;etudiant&quot; ) ||&#xD;&#xA;StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;univer&quot;)&#xD;&#xA;&#xD;&#xA;) ? &quot;Bac&quot; :&#xD;&#xA;(&#xD;&#xA;    // Classe &quot;Sans Bac&quot; (Niveau Bac, Inconnu, Étudiant sans diplôme)&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;niveaubac&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;sansbac&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;inconnu&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;sansdiplom&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;sansdiplôme&quot;)||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;lyc&quot;)||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;secondaryschool&quot;)&#xD;&#xA;) ? &quot;Sans Bac&quot; :&#xD;&#xA;(&#xD;&#xA;    // Classe &quot;Bac+2&quot; (Bac+2, DUT, DEUST, Prépa, 2ème Année d'Université)&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;bac+2&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;dut&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;deust&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;prépa&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;prepa&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;2ème&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;2éme&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;2eme&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;2&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;deuxièmeannée&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;techn&quot;)&#xD;&#xA;) ? &quot;Bac+2&quot; :&#xD;&#xA;(&#xD;&#xA;    // Classe &quot;Bac+3&quot; (Licence, Licence Professionnelle, Bac+3)&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;bac+3&quot;) ||&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;bac+4&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;licence&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;licenceprofessionnelle&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;3èmeannée&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;3emeannee&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;3&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;troisiemeannee&quot;)||&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;4èmeannée&quot;) ||&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;4emeannee&quot;) ||&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;4eannee&quot;) ||&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;quatriemeannee&quot;)&#xD;&#xA;) ? &quot;Bac+3&quot; :&#xD;&#xA;(&#xD;&#xA;   StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().matches(&quot;.*(bac\\+([5-9]|[1-9][0-9])|master|ingénieur|ingenieur|doctorat|phd|[5-9]e?me?année|cinquiemeannée).*&quot;) ||&#xD;&#xA;    //StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;bac+5&quot;) ||&#xD;&#xA;    //StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;bac+7&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;master&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;ingénieur&quot;) ||&#xD;&#xA;    StringHandling.EREPLACE(StringHandling.TRIM(row3.Votre_niveau_d_etudes), &quot; &quot;, &quot;&quot;).toLowerCase().contains(&quot;ingenieur&quot;) &#xD;&#xA;) ? &quot;Bac+5&quot; :&#xD;&#xA;&quot;Sans Bac&quot;; " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_specialite" expression="row3.Votre_specialite " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Etablissement" expression="row3.Etablissement " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Avez_Vous_deja_participer_au_programmes_ODC" expression="row3.Avez_Vous_deja_participer_au_programmes_ODC " type="id_String" nullable="true"/>
+        <mapperTableEntries name="linkedIn" expression="row3.linkedIn " type="id_String" nullable="true"/>
+        <mapperTableEntries name="userCV" expression="row3.userCV " type="id_String" nullable="true"/>
+      </outputTables>
+      <inputTables sizeState="INTERMEDIATE" name="row3" matchingMode="UNIQUE_MATCH" lookupMode="LOAD_ONCE">
+        <mapperTableEntries name="Annee" type="id_Integer" nullable="true"/>
+        <mapperTableEntries name="EDC_FabLab" type="id_String" nullable="true"/>
+        <mapperTableEntries name="FORMATION" type="id_String" nullable="true"/>
+        <mapperTableEntries name="DATE" type="id_String" nullable="true"/>
+        <mapperTableEntries name="ETAT" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Profil_recommande_pour_Job_Dating" type="id_String" nullable="true"/>
+        <mapperTableEntries name="EMAIL" type="id_String" nullable="true"/>
+        <mapperTableEntries name="First_Name" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Last_Name" type="id_String" nullable="true"/>
+        <mapperTableEntries name="gender" type="id_String" nullable="true"/>
+        <mapperTableEntries name="profession" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_numero_de_telephone" type="id_String" nullable="true"/>
+        <mapperTableEntries name="birthDay" type="id_String" nullable="true"/>
+        <mapperTableEntries name="country" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Nom_Prenom" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_Age" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Categorie_d_age" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_niveau_d_etudes" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_specialite" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Etablissement" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Avez_Vous_deja_participer_au_programmes_ODC" type="id_String" nullable="true"/>
+        <mapperTableEntries name="linkedIn" type="id_String" nullable="true"/>
+        <mapperTableEntries name="userCV" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Column23" type="id_String"/>
+        <mapperTableEntries name="Column24" type="id_String"/>
+        <mapperTableEntries name="Column25" type="id_String"/>
+        <mapperTableEntries name="Column26" type="id_String"/>
+        <mapperTableEntries name="Column27" type="id_String"/>
+        <mapperTableEntries name="Column28" type="id_String"/>
+        <mapperTableEntries name="Column29" type="id_String"/>
+        <mapperTableEntries name="Column30" type="id_String"/>
+        <mapperTableEntries name="Column31" type="id_String"/>
+        <mapperTableEntries name="Column32" type="id_String"/>
+        <mapperTableEntries name="Column33" type="id_String"/>
+        <mapperTableEntries name="Column34" type="id_String"/>
+        <mapperTableEntries name="Column35" type="id_String"/>
+        <mapperTableEntries name="Column36" type="id_String"/>
+        <mapperTableEntries name="Column37" type="id_String"/>
+        <mapperTableEntries name="Column38" type="id_String"/>
+        <mapperTableEntries name="Column39" type="id_String"/>
+        <mapperTableEntries name="Column40" type="id_String"/>
+        <mapperTableEntries name="Column41" type="id_String"/>
+        <mapperTableEntries name="Column42" type="id_String"/>
+        <mapperTableEntries name="Column43" type="id_String"/>
+        <mapperTableEntries name="Column44" type="id_String"/>
+        <mapperTableEntries name="correctedEmail" type="id_String" nullable="true"/>
+      </inputTables>
+    </nodeData>
+  </node>
+  <node componentName="tMap" componentVersion="2.1" offsetLabelX="13" offsetLabelY="0" posX="1184" posY="128">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tMap_1" show="false"/>
+    <elementParameter field="EXTERNAL" name="MAP" value=""/>
+    <elementParameter field="CLOSED_LIST" name="LINK_STYLE" value="AUTO"/>
+    <elementParameter field="DIRECTORY" name="TEMPORARY_DATA_DIRECTORY" value=""/>
+    <elementParameter field="IMAGE" name="PREVIEW" value="_jjthUO7MEe-2iIvzaDvW3g-tMap_1-PREVIEW.bmp"/>
+    <elementParameter field="CHECK" name="DIE_ON_ERROR" value="true" show="false"/>
+    <elementParameter field="CHECK" name="LKUP_PARALLELIZE" value="false" show="false"/>
+    <elementParameter field="TEXT" name="LEVENSHTEIN" value="0" show="false"/>
+    <elementParameter field="TEXT" name="JACCARD" value="0" show="false"/>
+    <elementParameter field="CHECK" name="ENABLE_AUTO_CONVERT_TYPE" value="false" show="false"/>
+    <elementParameter field="TEXT" name="ROWS_BUFFER_SIZE" value="2000000"/>
+    <elementParameter field="CHECK" name="CHANGE_HASH_AND_EQUALS_FOR_BIGDECIMAL" value="true"/>
+    <elementParameter field="TEXT" name="LABEL" value="__UNIQUE_NAME__"/>
+    <elementParameter field="TEXT" name="HINT" value="&lt;b>__UNIQUE_NAME__&lt;/b>&lt;br>__COMMENT__"/>
+    <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <metadata connector="FLOW" name="out1">
+      <column comment="" key="false" length="4" name="Annee" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Integer" usefulColumn="true"/>
+      <column comment="" key="false" length="13" name="EDC_FabLab" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="54" name="FORMATION" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="32" name="DATE" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="20" name="ETAT" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="30" name="Profil_recommande_pour_Job_Dating" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="33" name="EMAIL" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="15" name="First_Name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="12" name="Last_Name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="5" name="gender" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="26" name="profession" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="15" name="Votre_numero_de_telephone" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="29" name="birthDay" nullable="true" pattern="&quot;dd/MM/yyyy&quot;" precision="0" type="id_Date" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="country" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Nom_Prenom" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="2" name="Votre_Age" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Integer" usefulColumn="true"/>
+      <column comment="" key="false" length="13" name="Categorie_d_age" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="7" name="Votre_niveau_d_etudes" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="52" name="Votre_specialite" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="65" name="Etablissement" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="21" name="Avez_Vous_deja_participer_au_programmes_ODC" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Boolean" usefulColumn="true"/>
+      <column comment="" key="false" length="152" name="linkedIn" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="userCV" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="-1" name="dateDebut" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="-1" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
+      <column comment="" key="false" length="-1" name="dateFin" nullable="false" pattern="" precision="-1" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
+    </metadata>
+    <nodeData xsi:type="TalendMapper:MapperData">
+      <uiProperties/>
+      <varTables sizeState="INTERMEDIATE" name="Var">
+        <mapperTableEntries name="dateDebut" expression="// Expression tMap pour formater la date début&#xD;&#xA;(out2.DATE != null) ?&#xD;&#xA;    (&#xD;&#xA;        // D'abord, supprimer tous les espaces dans la chaîne&#xD;&#xA;        (out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).contains(&quot;/&quot;)) ?&#xD;&#xA;            (&#xD;&#xA;   // Cas 1: format sans espace &quot;jj/mm-jj/mm&quot; (ex: &quot;01/07-15/09&quot;)&#xA;(out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).matches(&quot;\\d+/\\d+-\\d+/\\d+&quot;)) ?&#xA;    out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).split(&quot;-&quot;)[0] + (out2.Annee != null ? &quot;/&quot; + out2.Annee : &quot;&quot;) :&#xD;&#xA;                &#xD;&#xA;                // Cas 2: format sans espace &quot;jj-jj/mm&quot; (ex: &quot;01-15/09&quot;)&#xD;&#xA;                (out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).contains(&quot;-&quot;) &amp;&amp; out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).contains(&quot;/&quot;)) ?&#xD;&#xA;                    out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).split(&quot;-&quot;)[0] + &quot;/&quot; + &#xD;&#xA;                    out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).split(&quot;/&quot;)[1] + (out2.Annee != null ? &quot;/&quot; + out2.Annee : &quot;&quot;) :&#xD;&#xA;                &#xD;&#xA;                // Cas 3: format simple &quot;jj/mm&quot;&#xD;&#xA;                out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).split(&quot;-&quot;)[0].split(&quot;/&quot;)[0] + &quot;/&quot; + &#xD;&#xA;                out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).split(&quot;-&quot;)[0].split(&quot;/&quot;)[1] + (out2.Annee != null ? &quot;/&quot; + out2.Annee : &quot;&quot;)&#xD;&#xA;            ) :&#xA;            // Cas 4: format avec espace &quot;jj/mm jj/mm&quot; (ex: &quot;01/07 15/09&quot;)&#xA;(out2.DATE.trim().matches(&quot;\\d+/\\d+\\s+\\d+/\\d+&quot;)) ?&#xA;    out2.DATE.trim().split(&quot;\\s+&quot;)[0] + (out2.Annee != null ? &quot;/&quot; + out2.Annee : &quot;&quot;) :&#xD;&#xA;            &#xD;&#xA;        // Autres cas: garder la date telle quelle&#xD;&#xA;        out2.DATE.trim()&#xD;&#xA;    ) : null " type="id_String"/>
+        <mapperTableEntries name="dateFin" expression="// Expression tMap pour formater la date fin&#xD;&#xA;(out2.DATE != null) ?&#xD;&#xA;    (&#xD;&#xA;        // D'abord, vérifier si la chaîne contient &quot;/&quot;&#xD;&#xA;        (out2.DATE.contains(&quot;/&quot;)) ?&#xD;&#xA;            (&#xD;&#xA;                // Cas 1: format sans espace &quot;jj/mm-jj/mm&quot; (ex: &quot;01/07-15/09&quot;)&#xD;&#xA;                (out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).matches(&quot;\\d+/\\d+-\\d+/\\d+&quot;)) ?&#xD;&#xA;                    out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).split(&quot;-&quot;)[1] + (out2.Annee != null ? &quot;/&quot; + out2.Annee : &quot;&quot;) :&#xD;&#xA;                &#xD;&#xA;                // Cas 2: format sans espace &quot;jj-jj/mm&quot; (ex: &quot;01-15/09&quot;)&#xD;&#xA;                (out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).contains(&quot;-&quot;) &amp;&amp; out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).contains(&quot;/&quot;)) ?&#xD;&#xA;                    out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).split(&quot;-&quot;)[1] + (out2.Annee != null ? &quot;/&quot; + out2.Annee : &quot;&quot;) :&#xD;&#xA;                &#xD;&#xA;                // Cas 3: format simple &quot;jj/mm&quot; (pas de date de fin distincte)&#xD;&#xA;                (!out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;).contains(&quot;-&quot;) &amp;&amp; !out2.DATE.contains(&quot; &quot;)) ?&#xD;&#xA;                    out2.DATE.replaceAll(&quot;\\s+&quot;, &quot;&quot;) + (out2.Annee != null ? &quot;/&quot; + out2.Annee : &quot;/2024&quot;) :&#xD;&#xA;                &#xD;&#xA;                // Cas 4: format avec espace &quot;jj/mm jj/mm&quot; (ex: &quot;01/07 15/09&quot;)&#xD;&#xA;                (out2.DATE.trim().matches(&quot;\\d+/\\d+\\s+\\d+/\\d+&quot;)) ?&#xD;&#xA;                    out2.DATE.trim().split(&quot;\\s+&quot;)[1] + (out2.Annee != null ? &quot;/&quot; + out2.Annee : &quot;/2024&quot;) :&#xD;&#xA;                &#xD;&#xA;                // Autres cas: garder la date telle quelle et ajouter année&#xD;&#xA;                out2.DATE.trim() + (out2.Annee != null ? &quot;/&quot; + out2.Annee : &quot;/2024&quot;)&#xD;&#xA;            ) :&#xD;&#xA;            // Si pas de &quot;/&quot;, garder la date telle quelle et ajouter année&#xD;&#xA;            out2.DATE.trim() + (out2.Annee != null ? &quot;/&quot; + out2.Annee : &quot;/2024&quot;)&#xD;&#xA;    ) : null " type="id_String"/>
+      </varTables>
+      <outputTables sizeState="INTERMEDIATE" name="out1">
+        <mapperTableEntries name="Annee" expression="out2.Annee " type="id_Integer" nullable="true"/>
+        <mapperTableEntries name="EDC_FabLab" expression="out2.EDC_FabLab " type="id_String" nullable="true"/>
+        <mapperTableEntries name="FORMATION" expression="out2.FORMATION " type="id_String" nullable="true"/>
+        <mapperTableEntries name="DATE" expression="out2.DATE " type="id_String" nullable="true"/>
+        <mapperTableEntries name="ETAT" expression="out2.ETAT " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Profil_recommande_pour_Job_Dating" expression="(row1.ETAT != null &amp;&amp; &#xD;&#xA; (row1.ETAT.trim().equals(&quot;Confirmé / Présent&quot;) || row1.ETAT.trim().equals(&quot;Absence justifiée&quot;)) &amp;&amp; &#xD;&#xA; row1.profession != null &amp;&amp; &#xD;&#xA; (row1.profession.equals(&quot;Etudiant&quot;) || row1.profession.equals(&quot;Sans Emploi&quot;)) &amp;&amp;&#xD;&#xA; row1.Votre_niveau_d_etudes != null &amp;&amp; &#xD;&#xA; (row1.Votre_niveau_d_etudes.equals(&quot;Bac+2&quot;) || row1.Votre_niveau_d_etudes.equals(&quot;Bac+3&quot;) || row1.Votre_niveau_d_etudes.equals(&quot;Bac+5&quot;)))&#xD;&#xA;? &quot;Je recommande&quot; &#xD;&#xA;// Condition pour &quot;Neutre&quot;&#xD;&#xA;: (row1.ETAT != null &amp;&amp; &#xD;&#xA;   (row1.ETAT.trim().equals(&quot;Confirmé / Présent&quot;) || row1.ETAT.trim().equals(&quot;Absence justifiée&quot;)) &amp;&amp; &#xD;&#xA;   row1.profession != null &amp;&amp; &#xD;&#xA;   (row1.profession.equals(&quot;Etudiant&quot;) || row1.profession.equals(&quot;Sans Emploi&quot;)) &amp;&amp;&#xD;&#xA;   row1.Votre_niveau_d_etudes != null &amp;&amp; &#xD;&#xA;   (row1.Votre_niveau_d_etudes.equals(&quot;Bac&quot;) || row1.Votre_niveau_d_etudes.equals(&quot;Sans Bac&quot;)))&#xD;&#xA;  ? &quot;Neutre&quot; &#xD;&#xA;  // Condition pour &quot;Je ne recommande pas&quot;&#xD;&#xA;  : (row1.ETAT != null &amp;&amp; &#xD;&#xA;     (row1.ETAT.trim().equals(&quot;Confirmé / Abandonné&quot;) || row1.ETAT.trim().equals(&quot;Confirmé / Absent&quot;)))&#xD;&#xA;    ? &quot;Je ne recommande pas&quot; &#xD;&#xA;    // Valeur par défaut : conserver la valeur existante&#xD;&#xA;    : row1.Profil_recommande_pour_Job_Dating " type="id_String" nullable="true"/>
+        <mapperTableEntries name="EMAIL" expression="out2.EMAIL " type="id_String" nullable="true"/>
+        <mapperTableEntries name="First_Name" expression="out2.First_Name " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Last_Name" expression="out2.Last_Name " type="id_String" nullable="true"/>
+        <mapperTableEntries name="gender" expression="out2.gender " type="id_String" nullable="true"/>
+        <mapperTableEntries name="profession" expression="out2.profession " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_numero_de_telephone" expression="out2.Votre_numero_de_telephone " type="id_String" nullable="true"/>
+        <mapperTableEntries name="birthDay" expression="(out2.birthDay == null &amp;&amp; out2.Annee != null &amp;&amp; out2.Votre_Age != null) ? &#xD;&#xA;    TalendDate.addDate(TalendDate.parseDate(&quot;yyyy-MM-dd&quot;, out2.Annee + &quot;-&quot; + &#xD;&#xA;        (out2.Votre_Age % 2 == 0 ? &quot;01-01&quot; : &quot;07-01&quot;)), &#xD;&#xA;        -out2.Votre_Age, &quot;yyyy&quot;) &#xD;&#xA;    : &#xD;&#xA;    out2.birthDay " type="id_Date" nullable="true"/>
+        <mapperTableEntries name="country" expression="out2.country " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Nom_Prenom" expression="out2.Nom_Prenom " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_Age" expression="out2.Votre_Age " type="id_Integer" nullable="true"/>
+        <mapperTableEntries name="Categorie_d_age" expression="out2.Categorie_d_age  =(out2.Votre_Age != null) ? &#xD;&#xA;    (out2.Votre_Age &lt; 15 ? &quot;&lt;15&quot; : &#xD;&#xA;    (out2.Votre_Age >= 15 &amp;&amp; out2.Votre_Age &lt;= 24 ? &quot;[15-24]&quot; : &#xD;&#xA;    (out2.Votre_Age >= 25 &amp;&amp; out2.Votre_Age &lt;= 34 ? &quot;[25-34]&quot; : &quot;>=35&quot;))) &#xD;&#xA;    : &quot;Inconnu&quot;; " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_niveau_d_etudes" expression="out2.Votre_niveau_d_etudes " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_specialite" expression="out2.Votre_specialite " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Etablissement" expression="out2.Etablissement " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Avez_Vous_deja_participer_au_programmes_ODC" expression="(out2.Avez_Vous_deja_participer_au_programmes_ODC == null) ? false : &#xD;&#xA;(out2.Avez_Vous_deja_participer_au_programmes_ODC.equals(&quot;Deux fois et (+)&quot;) || &#xD;&#xA; out2.Avez_Vous_deja_participer_au_programmes_ODC.equals(&quot;Oui, Deux fois et (+)&quot;) || &#xD;&#xA; out2.Avez_Vous_deja_participer_au_programmes_ODC.equals(&quot;[2]&quot;)) " type="id_Boolean" nullable="true"/>
+        <mapperTableEntries name="linkedIn" expression="out2.linkedIn " type="id_String" nullable="true"/>
+        <mapperTableEntries name="userCV" expression="out2.userCV " type="id_String" nullable="true"/>
+        <mapperTableEntries name="dateDebut" expression="Var.dateDebut " type="id_String"/>
+        <mapperTableEntries name="dateFin" expression="Var.dateFin " type="id_String"/>
+      </outputTables>
+      <inputTables sizeState="INTERMEDIATE" name="out2" matchingMode="UNIQUE_MATCH" lookupMode="LOAD_ONCE">
+        <mapperTableEntries name="Annee" type="id_Integer" nullable="true"/>
+        <mapperTableEntries name="EDC_FabLab" type="id_String" nullable="true"/>
+        <mapperTableEntries name="FORMATION" type="id_String" nullable="true"/>
+        <mapperTableEntries name="DATE" type="id_String" nullable="true"/>
+        <mapperTableEntries name="ETAT" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Profil_recommande_pour_Job_Dating" type="id_String" nullable="true"/>
+        <mapperTableEntries name="EMAIL" type="id_String" nullable="true"/>
+        <mapperTableEntries name="First_Name" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Last_Name" type="id_String" nullable="true"/>
+        <mapperTableEntries name="gender" type="id_String" nullable="true"/>
+        <mapperTableEntries name="profession" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_numero_de_telephone" type="id_String" nullable="true"/>
+        <mapperTableEntries name="birthDay" type="id_Date" nullable="true"/>
+        <mapperTableEntries name="country" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Nom_Prenom" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_Age" type="id_Integer" nullable="true"/>
+        <mapperTableEntries name="Categorie_d_age" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_niveau_d_etudes" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_specialite" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Etablissement" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Avez_Vous_deja_participer_au_programmes_ODC" type="id_String" nullable="true"/>
+        <mapperTableEntries name="linkedIn" type="id_String" nullable="true"/>
+        <mapperTableEntries name="userCV" type="id_String" nullable="true"/>
+      </inputTables>
+    </nodeData>
+  </node>
+  <node componentName="tMap" componentVersion="2.1" offsetLabelX="0" offsetLabelY="0" posX="1376" posY="128">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tMap_3" show="false"/>
+    <elementParameter field="EXTERNAL" name="MAP" value=""/>
+    <elementParameter field="CLOSED_LIST" name="LINK_STYLE" value="AUTO"/>
+    <elementParameter field="DIRECTORY" name="TEMPORARY_DATA_DIRECTORY" value=""/>
+    <elementParameter field="IMAGE" name="PREVIEW" value="_jjthUO7MEe-2iIvzaDvW3g-tMap_3-PREVIEW.bmp"/>
+    <elementParameter field="CHECK" name="DIE_ON_ERROR" value="true" show="false"/>
+    <elementParameter field="CHECK" name="LKUP_PARALLELIZE" value="false" show="false"/>
+    <elementParameter field="TEXT" name="LEVENSHTEIN" value="0" show="false"/>
+    <elementParameter field="TEXT" name="JACCARD" value="0" show="false"/>
+    <elementParameter field="CHECK" name="ENABLE_AUTO_CONVERT_TYPE" value="false" show="false"/>
+    <elementParameter field="TEXT" name="ROWS_BUFFER_SIZE" value="2000000"/>
+    <elementParameter field="CHECK" name="CHANGE_HASH_AND_EQUALS_FOR_BIGDECIMAL" value="true"/>
+    <elementParameter field="TEXT" name="LABEL" value="__UNIQUE_NAME__"/>
+    <elementParameter field="TEXT" name="HINT" value="&lt;b>__UNIQUE_NAME__&lt;/b>&lt;br>__COMMENT__"/>
+    <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <metadata connector="FLOW" name="out3">
+      <column comment="" key="false" length="4" name="Annee" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Integer" usefulColumn="true"/>
+      <column comment="" key="false" length="13" name="EDC_FabLab" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="54" name="FORMATION" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="32" name="DATE" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="20" name="ETAT" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="30" name="Profil_recommande_pour_Job_Dating" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="33" name="EMAIL" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="15" name="First_Name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="12" name="Last_Name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="5" name="gender" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="26" name="profession" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="15" name="Votre_numero_de_telephone" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="29" name="birthDay" nullable="true" pattern="&quot;dd/MM/yyyy&quot;" precision="0" type="id_Date" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="country" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Nom_Prenom" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="2" name="Votre_Age" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Integer" usefulColumn="true"/>
+      <column comment="" key="false" length="13" name="Categorie_d_age" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="7" name="Votre_niveau_d_etudes" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="52" name="Votre_specialite" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="65" name="Etablissement" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="21" name="Avez_Vous_deja_participer_au_programmes_ODC" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Boolean" usefulColumn="true"/>
+      <column comment="" key="false" length="152" name="linkedIn" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="userCV" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="-1" name="dateDebut" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="-1" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
+      <column comment="" key="false" length="-1" name="dateFin" nullable="false" pattern="" precision="-1" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
+    </metadata>
+    <nodeData xsi:type="TalendMapper:MapperData">
+      <uiProperties/>
+      <varTables sizeState="INTERMEDIATE" name="Var">
+        <mapperTableEntries name="id_Benificiaire" expression="TalendDate.formatDate(&quot;yyyyMMddHHmmssSSS&quot;, TalendDate.getCurrentDate()) &#xD;&#xA;              + &quot;_&quot; + (out1.First_Name != null ? out1.First_Name.hashCode() : 0)&#xA;; " type="id_String"/>
+      </varTables>
+      <outputTables sizeState="INTERMEDIATE" name="out3">
+        <mapperTableEntries name="Annee" expression="out1.Annee " type="id_Integer" nullable="true"/>
+        <mapperTableEntries name="EDC_FabLab" expression="out1.EDC_FabLab " type="id_String" nullable="true"/>
+        <mapperTableEntries name="FORMATION" expression="out1.FORMATION " type="id_String" nullable="true"/>
+        <mapperTableEntries name="DATE" expression="out1.DATE " type="id_String" nullable="true"/>
+        <mapperTableEntries name="ETAT" expression="out1.ETAT " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Profil_recommande_pour_Job_Dating" expression="(out1.ETAT != null &amp;&amp; &#xD;&#xA; (out1.ETAT.trim().equals(&quot;Confirmé / Présent&quot;) || out1.ETAT.trim().equals(&quot;Absence justifiée&quot;)) &amp;&amp; &#xD;&#xA; out1.profession != null &amp;&amp; &#xD;&#xA; (out1.profession.equals(&quot;Etudiant&quot;) || out1.profession.equals(&quot;Sans Emploi&quot;)) &amp;&amp;&#xD;&#xA; out1.Votre_niveau_d_etudes != null &amp;&amp; &#xD;&#xA; (out1.Votre_niveau_d_etudes.equals(&quot;Bac+2&quot;) || out1.Votre_niveau_d_etudes.equals(&quot;Bac+3&quot;) || out1.Votre_niveau_d_etudes.equals(&quot;Bac+5&quot;)))&#xD;&#xA;? &quot;Je recommande&quot; &#xD;&#xA;// Condition pour &quot;Neutre&quot;&#xD;&#xA;: (out1.ETAT != null &amp;&amp; &#xD;&#xA;   (out1.ETAT.trim().equals(&quot;Confirmé / Présent&quot;) || out1.ETAT.trim().equals(&quot;Absence justifiée&quot;)) &amp;&amp; &#xD;&#xA;   out1.profession != null &amp;&amp; &#xD;&#xA;   (out1.profession.equals(&quot;Etudiant&quot;) || out1.profession.equals(&quot;Sans Emploi&quot;)) &amp;&amp;&#xD;&#xA;   out1.Votre_niveau_d_etudes != null &amp;&amp; &#xD;&#xA;   (out1.Votre_niveau_d_etudes.equals(&quot;Bac&quot;) || out1.Votre_niveau_d_etudes.equals(&quot;Sans Bac&quot;)))&#xD;&#xA;  ? &quot;Neutre&quot; &#xD;&#xA;  // Condition pour &quot;Je ne recommande pas&quot;&#xD;&#xA;  : (out1.ETAT != null &amp;&amp; &#xD;&#xA;     (out1.ETAT.trim().equals(&quot;Confirmé / Abandonné&quot;) || out1.ETAT.trim().equals(&quot;Confirmé / Absent&quot;)))&#xD;&#xA;    ? &quot;Je ne recommande pas&quot; &#xD;&#xA;    // Valeur par défaut : conserver la valeur existante&#xD;&#xA;    : out1.Profil_recommande_pour_Job_Dating " type="id_String" nullable="true"/>
+        <mapperTableEntries name="EMAIL" expression="out1.EMAIL " type="id_String" nullable="true"/>
+        <mapperTableEntries name="First_Name" expression="out1.First_Name " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Last_Name" expression="out1.Last_Name " type="id_String" nullable="true"/>
+        <mapperTableEntries name="gender" expression="out1.gender " type="id_String" nullable="true"/>
+        <mapperTableEntries name="profession" expression="out1.profession " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_numero_de_telephone" expression="out1.Votre_numero_de_telephone " type="id_String" nullable="true"/>
+        <mapperTableEntries name="birthDay" expression="out1.birthDay " type="id_Date" nullable="true"/>
+        <mapperTableEntries name="country" expression="out1.country " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Nom_Prenom" expression="out1.Nom_Prenom " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_Age" expression="out1.Votre_Age " type="id_Integer" nullable="true"/>
+        <mapperTableEntries name="Categorie_d_age" expression="out1.Categorie_d_age == null || out1.Categorie_d_age.isEmpty() ? &#xD;&#xA;    (String)globalMap.get(&quot;median_categorie_age&quot;) : &#xD;&#xA;    out1.Categorie_d_age " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_niveau_d_etudes" expression="out1.Votre_niveau_d_etudes " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_specialite" expression="out1.Votre_specialite " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Etablissement" expression="out1.Etablissement " type="id_String" nullable="true"/>
+        <mapperTableEntries name="Avez_Vous_deja_participer_au_programmes_ODC" expression="out1.Avez_Vous_deja_participer_au_programmes_ODC " type="id_Boolean" nullable="true"/>
+        <mapperTableEntries name="linkedIn" expression="out1.linkedIn " type="id_String" nullable="true"/>
+        <mapperTableEntries name="userCV" expression="out1.userCV " type="id_String" nullable="true"/>
+        <mapperTableEntries name="dateDebut" expression="out1.dateDebut " type="id_String"/>
+        <mapperTableEntries name="dateFin" expression="out1.dateFin " type="id_String"/>
+      </outputTables>
+      <inputTables sizeState="INTERMEDIATE" name="out1" matchingMode="UNIQUE_MATCH" lookupMode="LOAD_ONCE">
+        <mapperTableEntries name="Annee" type="id_Integer" nullable="true"/>
+        <mapperTableEntries name="EDC_FabLab" type="id_String" nullable="true"/>
+        <mapperTableEntries name="FORMATION" type="id_String" nullable="true"/>
+        <mapperTableEntries name="DATE" type="id_String" nullable="true"/>
+        <mapperTableEntries name="ETAT" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Profil_recommande_pour_Job_Dating" type="id_String" nullable="true"/>
+        <mapperTableEntries name="EMAIL" type="id_String" nullable="true"/>
+        <mapperTableEntries name="First_Name" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Last_Name" type="id_String" nullable="true"/>
+        <mapperTableEntries name="gender" type="id_String" nullable="true"/>
+        <mapperTableEntries name="profession" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_numero_de_telephone" type="id_String" nullable="true"/>
+        <mapperTableEntries name="birthDay" type="id_Date" nullable="true"/>
+        <mapperTableEntries name="country" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Nom_Prenom" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_Age" type="id_Integer" nullable="true"/>
+        <mapperTableEntries name="Categorie_d_age" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_niveau_d_etudes" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Votre_specialite" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Etablissement" type="id_String" nullable="true"/>
+        <mapperTableEntries name="Avez_Vous_deja_participer_au_programmes_ODC" type="id_Boolean" nullable="true"/>
+        <mapperTableEntries name="linkedIn" type="id_String" nullable="true"/>
+        <mapperTableEntries name="userCV" type="id_String" nullable="true"/>
+        <mapperTableEntries name="dateDebut" type="id_String"/>
+        <mapperTableEntries name="dateFin" type="id_String"/>
+      </inputTables>
+    </nodeData>
+  </node>
+  <node componentName="tFileOutputExcel" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="1600" posY="128">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tFileOutputExcel_1" show="false"/>
+    <elementParameter field="CHECK" name="VERSION_2007" value="false"/>
+    <elementParameter field="CHECK" name="USESTREAM" value="false"/>
+    <elementParameter field="TEXT" name="STREAMNAME" value="outputStream" show="false"/>
+    <elementParameter field="FILE" name="FILENAME" value="&quot;outdataset.xlsx&quot;"/>
+    <elementParameter field="TEXT" name="SHEETNAME" value="&quot;Sheet1&quot;"/>
+    <elementParameter field="CHECK" name="INCLUDEHEADER" value="true"/>
+    <elementParameter field="CHECK" name="APPEND_FILE" value="false"/>
+    <elementParameter field="CHECK" name="APPEND_SHEET" value="false" show="false"/>
+    <elementParameter field="CHECK" name="FIRST_CELL_Y_ABSOLUTE" value="false"/>
+    <elementParameter field="TEXT" name="FIRST_CELL_X" value="0" show="false"/>
+    <elementParameter field="TEXT" name="FIRST_CELL_Y" value="0" show="false"/>
+    <elementParameter field="CHECK" name="KEEP_CELL_FORMATING" value="false" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="FONT" value=""/>
+    <elementParameter field="CHECK" name="IS_ALL_AUTO_SZIE" value="false"/>
+    <elementParameter field="TABLE" name="AUTO_SZIE_SETTING">
+      <elementValue elementRef="SCHEMA_COLUMN" value="Annee"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="EDC_FabLab"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="FORMATION"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="DATE"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="ETAT"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Profil_recommande_pour_Job_Dating"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="EMAIL"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="First_Name"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Last_Name"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="gender"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="profession"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Votre_numero_de_telephone"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="birthDay"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="country"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Nom_Prenom"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Votre_Age"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Categorie_d_age"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Votre_niveau_d_etudes"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Votre_specialite"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Etablissement"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Avez_Vous_deja_participer_au_programmes_ODC"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="linkedIn"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="userCV"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="dateDebut"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="dateFin"/>
+      <elementValue elementRef="IS_AUTO_SIZE" value="false"/>
+    </elementParameter>
+    <elementParameter field="CHECK" name="PROTECT_FILE" value="false" show="false"/>
+    <elementParameter field="PASSWORD" name="PASSWORD" value="enc:system.encryption.key.v1:zyRGjPaDi5u9MMWUAK5Cummttz51CV2x/Fuy2MzS" show="false"/>
+    <elementParameter field="CHECK" name="CREATE" value="true"/>
+    <elementParameter field="CHECK" name="FLUSHONROW" value="false" show="false"/>
+    <elementParameter field="TEXT" name="FLUSHONROW_NUM" value="100" show="false"/>
+    <elementParameter field="CHECK" name="ADVANCED_SEPARATOR" value="false"/>
+    <elementParameter field="TEXT" name="THOUSANDS_SEPARATOR" value="&quot;,&quot;" show="false"/>
+    <elementParameter field="TEXT" name="DECIMAL_SEPARATOR" value="&quot;.&quot;" show="false"/>
+    <elementParameter field="CHECK" name="TRUNCATE_EXCEEDING_CHARACTERS" value="false" show="false"/>
+    <elementParameter field="ENCODING_TYPE" name="ENCODING" value="&quot;ISO-8859-15&quot;"/>
+    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="ISO-8859-15"/>
+    <elementParameter field="CHECK" name="DELETE_EMPTYFILE" value="false"/>
+    <elementParameter field="CHECK" name="RECALCULATE_FORMULA" value="false" show="false"/>
+    <elementParameter field="CHECK" name="STREAMING_APPEND" value="false" show="false"/>
+    <elementParameter field="TEXT" name="SCHEMA_OPT_NUM" value="100" show="false"/>
+    <elementParameter field="TEXT" name="LABEL" value="__UNIQUE_NAME__"/>
+    <elementParameter field="TEXT" name="HINT" value="&lt;b>__UNIQUE_NAME__&lt;/b>&lt;br>__COMMENT__"/>
+    <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <metadata connector="FLOW" name="tFileOutputExcel_1">
+      <column comment="" key="false" length="4" name="Annee" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Integer" usefulColumn="true"/>
+      <column comment="" key="false" length="13" name="EDC_FabLab" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="54" name="FORMATION" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="32" name="DATE" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="20" name="ETAT" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="30" name="Profil_recommande_pour_Job_Dating" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="33" name="EMAIL" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="15" name="First_Name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="12" name="Last_Name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="5" name="gender" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="26" name="profession" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="15" name="Votre_numero_de_telephone" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="29" name="birthDay" nullable="true" pattern="&quot;dd/MM/yyyy&quot;" precision="0" type="id_Date" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="country" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Nom_Prenom" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="2" name="Votre_Age" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Integer" usefulColumn="true"/>
+      <column comment="" key="false" length="13" name="Categorie_d_age" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="7" name="Votre_niveau_d_etudes" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="52" name="Votre_specialite" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="65" name="Etablissement" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="21" name="Avez_Vous_deja_participer_au_programmes_ODC" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Boolean" usefulColumn="true"/>
+      <column comment="" key="false" length="152" name="linkedIn" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="userCV" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="-1" name="dateDebut" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="-1" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
+      <column comment="" key="false" length="-1" name="dateFin" nullable="false" pattern="" precision="-1" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
+    </metadata>
+  </node>
+  <node componentName="tLogRow" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="1632" posY="256">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tLogRow_1" show="false"/>
+    <elementParameter field="RADIO" name="BASIC_MODE" value="true"/>
+    <elementParameter field="RADIO" name="TABLE_PRINT" value="false"/>
+    <elementParameter field="RADIO" name="VERTICAL" value="false"/>
+    <elementParameter field="RADIO" name="PRINT_UNIQUE" value="true" show="false"/>
+    <elementParameter field="RADIO" name="PRINT_LABEL" value="false" show="false"/>
+    <elementParameter field="RADIO" name="PRINT_UNIQUE_LABEL" value="false" show="false"/>
+    <elementParameter field="TEXT" name="FIELDSEPARATOR" value="&quot;|&quot;"/>
+    <elementParameter field="CHECK" name="PRINT_HEADER" value="false"/>
+    <elementParameter field="CHECK" name="PRINT_UNIQUE_NAME" value="false"/>
+    <elementParameter field="CHECK" name="PRINT_COLNAMES" value="false"/>
+    <elementParameter field="CHECK" name="USE_FIXED_LENGTH" value="false"/>
+    <elementParameter field="TABLE" name="LENGTHS" show="false">
+      <elementValue elementRef="SCHEMA_COLUMN" value="Annee"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="EDC_FabLab"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="FORMATION"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="DATE"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="ETAT"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Profil_recommande_pour_Job_Dating"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="EMAIL"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="First_Name"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Last_Name"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="gender"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="profession"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Votre_numero_de_telephone"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="birthDay"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="country"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Nom_Prenom"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Votre_Age"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Categorie_d_age"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Votre_niveau_d_etudes"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Votre_specialite"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Etablissement"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="Avez_Vous_deja_participer_au_programmes_ODC"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="linkedIn"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="userCV"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="dateDebut"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="dateFin"/>
+      <elementValue elementRef="LENGTH" value="10"/>
+    </elementParameter>
+    <elementParameter field="CHECK" name="PRINT_CONTENT_WITH_LOG4J" value="true"/>
+    <elementParameter field="TEXT" name="SCHEMA_OPT_NUM" value="100" show="false"/>
+    <elementParameter field="TEXT" name="LABEL" value="__UNIQUE_NAME__"/>
+    <elementParameter field="TEXT" name="HINT" value="&lt;b>__UNIQUE_NAME__&lt;/b>&lt;br>__COMMENT__"/>
+    <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <metadata connector="FLOW" name="tLogRow_1">
+      <column comment="" key="false" length="4" name="Annee" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Integer" usefulColumn="true"/>
+      <column comment="" key="false" length="13" name="EDC_FabLab" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="54" name="FORMATION" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="32" name="DATE" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="20" name="ETAT" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="30" name="Profil_recommande_pour_Job_Dating" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="33" name="EMAIL" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="15" name="First_Name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="12" name="Last_Name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="5" name="gender" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="26" name="profession" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="15" name="Votre_numero_de_telephone" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="29" name="birthDay" nullable="true" pattern="&quot;dd/MM/yyyy&quot;" precision="0" type="id_Date" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="country" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="Nom_Prenom" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="2" name="Votre_Age" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Integer" usefulColumn="true"/>
+      <column comment="" key="false" length="13" name="Categorie_d_age" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="7" name="Votre_niveau_d_etudes" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="52" name="Votre_specialite" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="65" name="Etablissement" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="21" name="Avez_Vous_deja_participer_au_programmes_ODC" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_Boolean" usefulColumn="true"/>
+      <column comment="" key="false" length="152" name="linkedIn" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="0" name="userCV" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
+      <column comment="" key="false" length="-1" name="dateDebut" nullable="false" pattern="&quot;dd-MM-yyyy&quot;" precision="-1" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
+      <column comment="" key="false" length="-1" name="dateFin" nullable="false" pattern="" precision="-1" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
+    </metadata>
+  </node>
+  <connection connectorName="FLOW" label="row1" lineStyle="0" metaname="tRunJob_1" offsetLabelX="0" offsetLabelY="0" source="tRunJob_1" target="tJavaRow_1">
+    <elementParameter field="CHECK" name="MONITOR_CONNECTION" value="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="row1" show="false"/>
+  </connection>
+  <connection connectorName="FLOW" label="row3" lineStyle="0" metaname="tJavaRow_1" offsetLabelX="0" offsetLabelY="0" source="tJavaRow_1" target="tMap_2">
+    <elementParameter field="CHECK" name="MONITOR_CONNECTION" value="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="row3" show="false"/>
+  </connection>
+  <connection connectorName="FLOW" label="out2" lineStyle="0" metaname="out2" offsetLabelX="0" offsetLabelY="0" source="tMap_2" target="tMap_1">
+    <elementParameter field="CHECK" name="MONITOR_CONNECTION" value="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="out2" show="false"/>
+  </connection>
+  <connection connectorName="FLOW" label="out1" lineStyle="0" metaname="out1" offsetLabelX="0" offsetLabelY="0" source="tMap_1" target="tMap_3">
+    <elementParameter field="TABLE" name="TRACES_CONNECTION_FILTER" show="false">
+      <elementValue elementRef="TRACE_COLUMN" value="dateFin"/>
+      <elementValue elementRef="TRACE_COLUMN_CHECKED" value="true"/>
+      <elementValue elementRef="TRACE_COLUMN_CONDITION" value=""/>
+    </elementParameter>
+    <elementParameter field="CHECK" name="MONITOR_CONNECTION" value="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="out1" show="false"/>
+  </connection>
+  <connection connectorName="FLOW" label="out3" lineStyle="0" metaname="out3" offsetLabelX="0" offsetLabelY="0" source="tMap_3" target="tFileOutputExcel_1">
+    <elementParameter field="TABLE" name="TRACES_CONNECTION_FILTER" show="false">
+      <elementValue elementRef="TRACE_COLUMN" value="dateFin"/>
+      <elementValue elementRef="TRACE_COLUMN_CHECKED" value="true"/>
+      <elementValue elementRef="TRACE_COLUMN_CONDITION" value=""/>
+      <elementValue elementRef="TRACE_COLUMN" value="id_Benificiaire"/>
+      <elementValue elementRef="TRACE_COLUMN_CHECKED" value="true"/>
+      <elementValue elementRef="TRACE_COLUMN_CONDITION" value=""/>
+    </elementParameter>
+    <elementParameter field="CHECK" name="MONITOR_CONNECTION" value="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="out3" show="false"/>
+  </connection>
+  <connection connectorName="FLOW" label="row2" lineStyle="0" metaname="tFileOutputExcel_1" offsetLabelX="0" offsetLabelY="0" source="tFileOutputExcel_1" target="tLogRow_1">
+    <elementParameter field="CHECK" name="MONITOR_CONNECTION" value="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="row2" show="false"/>
+  </connection>
+  <subjob>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tRunJob_1" show="false"/>
+    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" value="92;131;150" show="false"/>
+    <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
+  </subjob>
+</talendfile:ProcessType>

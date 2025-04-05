@@ -1,0 +1,110 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  airflow-init:
+    image: apache/airflow:latest
+    container_name: airflow-init
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    depends_on:
+      - postgres
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        airflow db init
+        airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin
+
+  airflow-webserver:
+    image: apache/airflow:latest
+    container_name: airflow-webserver
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - airflow_data:/opt/airflow
+      - airflow_plugins:/opt/airflow/plugins
+      - ./talend/jobs:/opt/airflow/talend_jobs # Unified mount point
+      - ./launch.sh:/launch.sh
+      - /var/run/docker.sock:/var/run/docker.sock # Docker socket mount (security risk)
+    user: "airflow"
+    depends_on:
+      - postgres
+      - airflow-init
+    command: ["webserver"]
+
+  airflow-scheduler:
+    image: apache/airflow:latest
+    container_name: airflow-scheduler
+    restart: always
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - airflow_data:/opt/airflow
+      - ./talend/jobs:/opt/airflow/talend_jobs # Unified mount point
+      - ./launch.sh:/launch.sh
+      - /var/run/docker.sock:/var/run/docker.sock # Docker socket mount (security risk)
+    depends_on:
+      - postgres
+      - airflow-init
+    command: ["scheduler"]
+
+  pentaho:
+    image: zhicwu/pdi-ce:latest
+    container_name: pentaho
+    restart: always
+    ports:
+      - "8085:8083"
+    volumes:
+      - ./pentaho:/opt/pentaho
+    command: ["tail", "-f", "/dev/null"]
+
+  talend-jobs:
+      image: openjdk:11
+      container_name: talend-jobs
+      restart: always
+      volumes:
+        - ./talend/jobs:/jobs
+      working_dir: /jobs
+      command: ["tail", "-f", "/dev/null"]
+  mer_app:
+    build: .
+    container_name: mer_app
+    environment:
+      - MONGODB_URI=mongodb+srv://salouaouissa:jD5IDdTVLoITMCpL@cluster0.nwqo9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - airflow-webserver
+    entrypoint: ["/scripts/wait-for-it.sh", "airflow-webserver:8080", "--", "npm", "start"]
+    volumes:
+      - ./scripts:/scripts
+      - ./talend/jobs:/jobs # Unified mount point
+
+volumes:
+  mongodb_data:
+  postgres_data:
+  airflow_data:
+  airflow_plugins:
