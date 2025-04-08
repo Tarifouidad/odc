@@ -41,9 +41,9 @@ services:
       - ./airflow/logs:/opt/airflow/logs
       - airflow_data:/opt/airflow
       - airflow_plugins:/opt/airflow/plugins
-      - ./talend/jobs:/opt/airflow/talend_jobs # Unified mount point
+      - ./talend/jobs:/opt/airflow/talend_jobs
       - ./launch.sh:/launch.sh
-      - /var/run/docker.sock:/var/run/docker.sock # Docker socket mount (security risk)
+      - /var/run/docker.sock:/var/run/docker.sock
     user: "airflow"
     depends_on:
       - postgres
@@ -62,9 +62,9 @@ services:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - airflow_data:/opt/airflow
-      - ./talend/jobs:/opt/airflow/talend_jobs # Unified mount point
+      - ./talend/jobs:/opt/airflow/talend_jobs
       - ./launch.sh:/launch.sh
-      - /var/run/docker.sock:/var/run/docker.sock # Docker socket mount (security risk)
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - postgres
       - airflow-init
@@ -81,13 +81,14 @@ services:
     command: ["tail", "-f", "/dev/null"]
 
   talend-jobs:
-      image: openjdk:11
-      container_name: talend-jobs
-      restart: always
-      volumes:
-        - ./talend/jobs:/jobs
-      working_dir: /jobs
-      command: ["tail", "-f", "/dev/null"]
+    image: openjdk:11
+    container_name: talend-jobs
+    restart: always
+    volumes:
+      - ./talend/jobs:/jobs
+    working_dir: /jobs
+    command: ["tail", "-f", "/dev/null"]
+
   mer_app:
     build: .
     container_name: mer_app
@@ -95,14 +96,9 @@ services:
       - MONGODB_URI=mongodb+srv://salouaouissa:jD5IDdTVLoITMCpL@cluster0.nwqo9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
     ports:
       - "3000:3000"
-    depends_on:
-      - postgres
-      - airflow-webserver
-    entrypoint: ["/scripts/wait-for-it.sh", "airflow-webserver:8080", "--", "npm", "start"]
     volumes:
       - ./scripts:/scripts
-      - ./talend/jobs:/jobs # Unified mount point
-
+    command: ["/bin/bash", "-c", "cd /app/mern && npm start"]
 volumes:
   mongodb_data:
   postgres_data:

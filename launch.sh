@@ -1,37 +1,42 @@
 #!/bin/bash
 
-# Définir les variables d'environnement
-TALEND_DIR="/app/talend/jobs/CorrigeAge/"
-MERN_DIR="/app/mern"
+echo "=== Démarrage simplifié de l'application MERN ($(date)) ==="
 
-# Modifier les permissions du répertoire Talend (more restrictive)
-chmod 750 "$TALEND_DIR"
+# Trouvons tous les package.json dans le système
+echo "Recherche des fichiers package.json disponibles..."
+PACKAGE_FILES=$(find /app -name "package.json" -type f)
 
-# Lancer Talend et capturer le code de sortie
-echo "Starting Talend job..."
-java -Dtalend.component.manager.m2.repository="$TALEND_DIR/../lib" -Xms256M -Xmx1024M -cp "$TALEND_DIR/../lib/*:." local_project.CorrigeAge.CorrigeAge --context=Default
-talend_exit_code=$?
-
-# Vérifier le code de sortie de Talend
-if [ $talend_exit_code -eq 0 ]; then
-    echo "Talend job executed successfully."
-    # Modifier les permissions du fichier outdataset.xlsx après sa création (more restrictive)
-    chmod 660 "$TALEND_DIR/CorrigeAge/outdataset.xlsx"
-else
-    echo "Talend job failed with exit code: $talend_exit_code"
+if [ -z "$PACKAGE_FILES" ]; then
+    echo "ERREUR: Aucun fichier package.json trouvé dans /app"
+    echo "Contenu de /app:"
+    ls -la /app
     exit 1
 fi
 
-# Lancer MERN et capturer le code de sortie
-echo "Starting MERN application..."
-cd "$MERN_DIR"
+echo "Fichiers package.json trouvés:"
+echo "$PACKAGE_FILES"
+
+# Prendre le premier package.json trouvé
+FIRST_PACKAGE=$(echo "$PACKAGE_FILES" | head -n 1)
+APP_DIR=$(dirname "$FIRST_PACKAGE")
+
+echo "Utilisation du package.json dans: $APP_DIR"
+cd "$APP_DIR"
+
+echo "Vérifions son contenu:"
+grep -E "name|scripts.*start" package.json || echo "ATTENTION: Pas de script start trouvé!"
+
+# Vérifier que node_modules existe
+if [ ! -d "node_modules" ]; then
+    echo "Installation des dépendances npm..."
+    npm install
+    
+    if [ $? -ne 0 ]; then
+        echo "Erreur lors de l'installation des dépendances. Tentative avec --force..."
+        npm install --force
+    fi
+fi
+
+# Lancer l'application
+echo "Démarrage de l'application MERN dans: $(pwd)"
 npm start
-mern_exit_code=$?
-
-# Vérifier le code de sortie de MERN
-if [ $mern_exit_code -eq 0 ]; then
-    echo "MERN application started successfully."
-else
-    echo "MERN application failed with exit code: $mern_exit_code"
-    exit 1
-fi

@@ -1,0 +1,185 @@
+from airflow import DAG
+from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
+from datetime import datetime, timedelta
+import os
+import shutil
+import requests
+import json
+
+# Fonction pour préparer le fichier d'entrée
+def prepare_input_file(**kwargs):
+    """
+    Prépare le fichier d'entrée pour le job Talend en le copiant vers le répertoire de travail.
+    """
+    # Récupérer le chemin du fichier à partir des paramètres du DAG
+    ti = kwargs['ti']
+    dag_run = kwargs['dag_run']
+    
+    file_path = dag_run.conf.get('file_path')
+    file_id = dag_run.conf.get('file_id')
+    
+    if not file_path or not os.path.exists(file_path):
+        print(f"Fichier non trouvé: {file_path}")
+        return False
+    
+    # Définir les chemins
+    target_dir = "/opt/airflow/talend_jobs/CorrigeAge/CorrigeAge"
+    os.makedirs(target_dir, exist_ok=True)
+    
+    # Copier le fichier vers le répertoire de travail de Talend
+    target_path = os.path.join(target_dir, "indataset.xlsx")
+    shutil.copy2(file_path, target_path)
+    print(f"Fichier copié vers {target_path}")
+    
+    # Stocker l'ID du fichier pour les tâches suivantes
+    ti.xcom_push(key='file_id', value=file_id)
+    
+    return True
+
+# Fonction pour vérifier le fichier de sortie et le copier dans le répertoire de sortie
+def handle_output_file(**kwargs):
+    """
+    Vérifie le fichier de sortie, le copie dans le répertoire partagé et met à jour le statut dans MongoDB.
+    """
+    import pandas as pd
+    
+    # Récupérer l'ID du fichier
+    ti = kwargs['ti']
+    file_id = ti.xcom_pull(key='file_id')
+    
+    if not file_id:
+        print("ID du fichier non trouvé, impossible de traiter le fichier de sortie")
+        return False
+    
+    # Vérifier le fichier de sortie
+    output_file = "/opt/airflow/talend_jobs/CorrigeAge/CorrigeAge/outdataset.xlsx"
+    
+    if not os.path.exists(output_file):
+        print(f"Fichier de sortie non trouvé: {output_file}")
+        update_mongo_status(file_id, 'failed', 'Fichier de sortie non généré')
+        return False
+    
+    try:
+        # Analyser le fichier Excel pour vérifier qu'il est valide
+        df = pd.read_excel(output_file)
+        print(f"Fichier de sortie vérifié: {len(df)} lignes, {len(df.columns)} colonnes")
+        
+        # Créer le répertoire de sortie s'il n'existe pas
+        output_dir = "/opt/airflow/talend_jobs/output"
+        os.makedirs(output_dir, exist_ok=True)
+        
+        # Copier le fichier vers le répertoire de sortie avec l'ID du fichier
+        processed_file = os.path.join(output_dir, f"processed_{file_id}.xlsx")
+        shutil.copy2(output_file, processed_file)
+        print(f"Fichier de sortie copié vers: {processed_file}")
+        
+        # Mettre à jour le statut dans MongoDB
+        update_mongo_status(file_id, 'completed')
+        
+        return True
+    except Exception as e:
+        print(f"Erreur lors du traitement du fichier de sortie: {str(e)}")
+        update_mongo_status(file_id, 'failed', str(e))
+        return False
+
+# Fonction pour mettre à jour le statut dans MongoDB
+def update_mongo_status(file_id, status, error_message=None):
+    """
+    Met à jour le statut du traitement dans la base de données MongoDB.
+    """
+    try:
+        # URL de l'API MERN
+        api_url = os.environ.get('MERN_API_URL', 'http://mer_app:3000/api')
+        
+        # Données à envoyer
+        data = {
+            'status': status
+        }
+        
+        if error_message:
+            data['error'] = error_message
+        
+        # Envoi de la requête PUT
+        headers = {'Content-Type': 'application/json'}
+        response = requests.put(
+            f"{api_url}/beneficiaire-files/{file_id}/update-status",
+            data=json.dumps(data),
+            headers=headers
+        )
+        
+        if response.status_code == 200:
+            print(f"Statut mis à jour dans MongoDB: {status}")
+            return True
+        else:
+            print(f"Erreur lors de la mise à jour du statut: {response.status_code} - {response.text}")
+            return False
+    except Exception as e:
+        print(f"Exception lors de la mise à jour du statut: {str(e)}")
+        return False
+
+# Définition des arguments par défaut
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=1),
+}
+
+# Création du DAG
+with DAG(
+    'talend_job_execution',
+    default_args=default_args,
+    description='DAG pour exécuter des jobs Talend avec des fichiers de l\'application MERN',
+    schedule_interval=None,  # Uniquement déclenché manuellement
+    start_date=datetime(2024, 1, 1),
+    catchup=False,
+    tags=['talend', 'mern'],
+) as dag:
+    
+    # Vérifier que le conteneur talend-jobs est en cours d'exécution
+    check_container = BashOperator(
+        task_id='check_talend_container',
+        bash_command='docker ps | grep talend-jobs || (echo "Starting talend-jobs container..." && docker start talend-jobs)',
+    )
+    
+    # Préparer le fichier d'entrée
+    prepare_input = PythonOperator(
+        task_id='prepare_input_file',
+        python_callable=prepare_input_file,
+        provide_context=True,
+    )
+    
+    # Exécuter le job Talend
+    run_talend_job = BashOperator(
+        task_id='execute_talend_job',
+        bash_command='''
+        docker exec talend-jobs bash -c "cd /jobs/CorrigeAge/CorrigeAge && chmod +x ./CorrigeAge_run.sh && ./CorrigeAge_run.sh > /jobs/CorrigeAge/job_output.log 2>&1"
+        ''',
+    )
+    
+    # Vérifier les résultats du job
+    check_results = BashOperator(
+        task_id='check_job_results',
+        bash_command='''
+        echo "Job Talend terminé - Vérification des résultats"
+        if [ -f /opt/airflow/talend_jobs/CorrigeAge/job_output.log ]; then
+            echo "Résumé du job :"
+            grep -A 5 "Code de sortie" /opt/airflow/talend_jobs/CorrigeAge/job_output.log || echo "Informations de sortie non trouvées"
+        else
+            echo "Fichier de log non trouvé. Vérifiez le conteneur talend-jobs directement."
+        fi
+        ''',
+    )
+    
+    # Traiter le fichier de sortie
+    process_output = PythonOperator(
+        task_id='process_output_file',
+        python_callable=handle_output_file,
+        provide_context=True,
+    )
+    
+    # Définir la séquence d'exécution des tâches
+    check_container >> prepare_input >> run_talend_job >> check_results >> process_output

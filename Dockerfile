@@ -1,11 +1,22 @@
 # Étape 1 : Image de base avec Java (pour Talend et Airflow)
 FROM openjdk:11-jre-slim AS base
 
-# Installer les dépendances nécessaires pour Talend
+# Installer les dépendances nécessaires pour Talend et Node.js
 RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     curl \
+    gnupg \
+    ca-certificates \
+    findutils \
     && rm -rf /var/lib/apt/lists/*
+
+# Installer Node.js et npm (version 20.x LTS "Iron")
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get update \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/* \
+    && node --version \
+    && npm --version
 
 # Étape 2 : Talend
 FROM base AS talend
@@ -81,7 +92,7 @@ COPY PFE/ ./
 EXPOSE 3000
 
 # Étape 5 : Image finale (multi-stage build)
-FROM airflow AS final
+FROM base AS final
 
 # Passer à l'utilisateur root pour les opérations privilégiées
 USER root
@@ -89,18 +100,42 @@ USER root
 # Installer Docker CLI pour permettre à Airflow d'exécuter des commandes Docker
 RUN apt-get update && apt-get install -y --no-install-recommends \
     docker.io \
+    python3 \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
+# Installer les dépendances Python nécessaires
+RUN pip3 install pandas openpyxl requests
+
+# Créer les répertoires nécessaires
+RUN mkdir -p /app/talend/jobs/CorrigeAge/ \
+    /app/mern \
+    /app/shared_data \
+    /app/shared_data/output \
+    /app/shared_data/archive \
+    /scripts
+
 # Copier le script de lancement et définir les permissions
-COPY launch.sh /app/launch.sh
-RUN chown airflow:airflow /app/launch.sh && \
-    chmod +x /app/launch.sh
+COPY launch.sh /scripts/launch.sh
+COPY scripts/wait-for-it.sh /scripts/wait-for-it.sh
+RUN chmod +x /scripts/launch.sh /scripts/wait-for-it.sh
+
+# Copier l'application Talend depuis l'étape précédente
+COPY --from=talend /opt/talend/jobs /app/talend/jobs
 
 # Copier l'application MERN depuis l'étape précédente
 COPY --from=mern /app/mern /app/mern
 
-# Revenir à l'utilisateur airflow
-USER airflow
+# Définir les variables d'environnement
+ENV PATH="/app/node_modules/.bin:${PATH}"
+ENV NODE_ENV=production
+ENV AIRFLOW_API_URL=http://airflow-webserver:8080/api/v1
+ENV AIRFLOW_USERNAME=admin
+ENV AIRFLOW_PASSWORD=admin
+ENV MERN_API_URL=http://localhost:3000/api
 
-# Commande par défaut
-CMD ["/bin/bash", "/app/launch.sh"]
+# Exposer le port
+EXPOSE 3000
+
+# Commande par défaut - exécute le script de lancement
+CMD ["/bin/bash", "/launch.sh"]
