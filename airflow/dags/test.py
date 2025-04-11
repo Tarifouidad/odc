@@ -5,21 +5,64 @@ from datetime import datetime, timedelta
 
 # Fonction pour vérifier le fichier Excel
 def check_excel_file(**kwargs):
-    import pandas as pd
     import os
+    import sys
     
     file_path = "/opt/airflow/talend_jobs/CorrigeAge/CorrigeAge/outdataset.xlsx"
     
+    # Affiche la version de Python et les chemins d'accès pour le débogage
+    print(f"Version Python: {sys.version}")
+    print(f"Chemins Python: {sys.path}")
+    
     if os.path.exists(file_path):
-        # Lire le fichier Excel
-        df = pd.read_excel(file_path)
-        # Afficher des informations sur le contenu
-        print(f"Le fichier contient {len(df)} lignes et {len(df.columns)} colonnes")
-        print("Premières lignes :")
-        print(df.head())
-        return True
+        print(f"Le fichier {file_path} existe.")
+        try:
+            # Essayer avec pandas et openpyxl (qui devrait maintenant être installé)
+            import pandas as pd
+            print(f"Pandas version: {pd.__version__}")
+            
+            # Specifier explicitement openpyxl comme moteur
+            df = pd.read_excel(file_path, engine='openpyxl')
+            
+            print(f"Le fichier contient {len(df)} lignes et {len(df.columns)} colonnes")
+            print("Noms des colonnes:", df.columns.tolist())
+            print("Premières lignes:")
+            print(df.head())
+            return True
+        except Exception as e:
+            print(f"Erreur lors de la lecture du fichier avec openpyxl: {e}")
+            
+            try:
+                # Essayer avec xlrd comme alternative
+                import pandas as pd
+                df = pd.read_excel(file_path, engine='xlrd')
+                print(f"Le fichier contient {len(df)} lignes et {len(df.columns)} colonnes (lu avec xlrd)")
+                print(df.head())
+                return True
+            except Exception as e2:
+                print(f"Erreur lors de la lecture du fichier avec xlrd: {e2}")
+                
+                # Afficher des informations sur le fichier en cas d'échec
+                import os
+                print(f"Taille du fichier: {os.path.getsize(file_path)} octets")
+                print(f"Permissions du fichier: {oct(os.stat(file_path).st_mode)[-3:]}")
+                return False
     else:
-        print("Le fichier n'existe pas")
+        print(f"Le fichier {file_path} n'existe pas")
+        
+        # Chercher où pourrait être le fichier
+        try:
+            import glob
+            excel_files = glob.glob("/opt/airflow/talend_jobs/**/*.xlsx", recursive=True)
+            if excel_files:
+                print("Fichiers Excel trouvés:")
+                for ef in excel_files:
+                    print(f"  - {ef}")
+            else:
+                print("Aucun fichier Excel trouvé dans le répertoire talend_jobs")
+        except Exception as e:
+            print(f"Erreur lors de la recherche de fichiers: {e}")
+        
         return False
 
 # Définition des arguments par défaut
@@ -71,14 +114,7 @@ with DAG(
         ''',
     )
     
-    # Nouvelle tâche pour vérifier le fichier Excel de sortie
-    check_excel_task = PythonOperator(
-        task_id='check_excel_content',
-        python_callable=check_excel_file,
-        dag=dag,  # Ici dag est défini car nous sommes dans le contexte du DAG
-    )
-    
-    # Vérifier l'existence du fichier avec BashOperator (alternative)
+    # Vérifier l'existence du fichier avec BashOperator (fournit plus d'informations)
     check_file_exists = BashOperator(
         task_id='check_file_exists',
         bash_command='''
@@ -87,12 +123,21 @@ with DAG(
             echo "Le fichier outdataset.xlsx existe."
             # Vérifier la taille du fichier
             ls -la /opt/airflow/talend_jobs/CorrigeAge/CorrigeAge/outdataset.xlsx
+            # Essayer de changer les permissions, mais ignorer l'erreur si ça échoue
+            chmod 644 /opt/airflow/talend_jobs/CorrigeAge/CorrigeAge/outdataset.xlsx || echo "Impossible de modifier les permissions mais on continue"
+            exit 0  # Force successful exit regardless
         else
             echo "Le fichier outdataset.xlsx n'a pas été trouvé."
-            # Vérifier si le fichier est dans un autre répertoire
-            find /opt/airflow/talend_jobs -name "outdataset.xlsx" -type f
+            # Autres vérifications...
+            exit 1  # Only fail if the file doesn't exist
         fi
         ''',
+    )
+    
+    # Nouvelle tâche pour vérifier le fichier Excel de sortie
+    check_excel_task = PythonOperator(
+        task_id='check_excel_content',
+        python_callable=check_excel_file,
     )
     
     # Définir la séquence d'exécution des tâches

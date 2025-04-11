@@ -1,22 +1,11 @@
 # Étape 1 : Image de base avec Java (pour Talend et Airflow)
 FROM openjdk:11-jre-slim AS base
 
-# Installer les dépendances nécessaires pour Talend et Node.js
+# Installer les dépendances nécessaires pour Talend
 RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     curl \
-    gnupg \
-    ca-certificates \
-    findutils \
     && rm -rf /var/lib/apt/lists/*
-
-# Installer Node.js et npm (version 20.x LTS "Iron")
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get update \
-    && apt-get install -y nodejs \
-    && rm -rf /var/lib/apt/lists/* \
-    && node --version \
-    && npm --version
 
 # Étape 2 : Talend
 FROM base AS talend
@@ -53,6 +42,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Créer le fichier requirements.txt pour les dépendances Python
+WORKDIR /tmp
+RUN echo "apache-airflow-providers-docker" > requirements.txt && \
+    echo "pandas>=1.5.0" >> requirements.txt && \
+    echo "xlrd>=2.0.1" >> requirements.txt && \
+    echo "openpyxl>=3.0.10" >> requirements.txt && \
+    echo "pyarrow>=12.0.0" >> requirements.txt
+
+# Installer les dépendances Python pour Airflow
+RUN pip3 install --no-cache-dir -r requirements.txt
+
 # Créer la structure de répertoires Airflow
 RUN mkdir -p /opt/airflow/dags /opt/airflow/logs /opt/airflow/plugins /opt/airflow/talend_jobs
 WORKDIR /opt/airflow
@@ -70,72 +70,61 @@ RUN find /opt/airflow/talend_jobs -name "*.sh" -type f -exec chmod +x {} \; && \
 # Passer à l'utilisateur airflow
 USER airflow
 
-# Installer le provider Docker pour Airflow
-RUN pip install --no-cache-dir apache-airflow-providers-docker
-
-# Étape 4 : Application MERN
-FROM node:20-slim AS mern
-
-# Définir le répertoire de travail
+# Étape 4 : Backend Node.js
+FROM node:20-slim AS backend
 WORKDIR /app/mern
 
-# Copier package.json et package-lock.json
-COPY PFE/package.json PFE/package-lock.json ./
-
-# Installer les dépendances
-RUN npm ci --production
-
-# Copier le reste de l'application MERN
-COPY PFE/ ./
-
 # Exposer le port
-EXPOSE 3000
+EXPOSE 5000
 
-# Étape 5 : Image finale (multi-stage build)
-FROM base AS final
+# Étape 5 : Frontend React
+FROM node:20-slim AS frontend
+WORKDIR /app/frontend
+
+# Installer les dépendances nécessaires
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    git \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Cette étape sera ignorée lors de la construction car nous monterons le code source
+# Mais nous définissons l'environnement pour être prêt
+ENV NODE_ENV=development
+ENV VITE_API_URL=http://mer_app:5000
+
+# Exposer le port pour le frontend
+EXPOSE 8081
+
+# Étape 6 : Image finale
+FROM airflow AS final
 
 # Passer à l'utilisateur root pour les opérations privilégiées
 USER root
 
-# Installer Docker CLI pour permettre à Airflow d'exécuter des commandes Docker
+# Installer Node.js et npm dans l'image finale
 RUN apt-get update && apt-get install -y --no-install-recommends \
     docker.io \
-    python3 \
-    python3-pip \
+    curl \
+    gnupg \
+    netcat \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && node -v && npm -v \
     && rm -rf /var/lib/apt/lists/*
 
-# Installer les dépendances Python nécessaires
-RUN pip3 install pandas openpyxl requests
+# Créer les répertoires partagés et définir les permissions appropriées
+RUN mkdir -p /app/mern/PFE /app/frontend && \
+    chown -R airflow:airflow /app && \
+    chmod -R 755 /app
 
-# Créer les répertoires nécessaires
-RUN mkdir -p /app/talend/jobs/CorrigeAge/ \
-    /app/mern \
-    /app/shared_data \
-    /app/shared_data/output \
-    /app/shared_data/archive \
-    /scripts
+# Copier les scripts avec des permissions d'exécution
+COPY scripts /scripts
+RUN chmod -R +x /scripts && \
+    chown -R airflow:airflow /scripts
 
-# Copier le script de lancement et définir les permissions
-COPY launch.sh /scripts/launch.sh
-COPY scripts/wait-for-it.sh /scripts/wait-for-it.sh
-RUN chmod +x /scripts/launch.sh /scripts/wait-for-it.sh
+# Revenir à l'utilisateur airflow
+USER airflow
 
-# Copier l'application Talend depuis l'étape précédente
-COPY --from=talend /opt/talend/jobs /app/talend/jobs
-
-# Copier l'application MERN depuis l'étape précédente
-COPY --from=mern /app/mern /app/mern
-
-# Définir les variables d'environnement
-ENV PATH="/app/node_modules/.bin:${PATH}"
-ENV NODE_ENV=production
-ENV AIRFLOW_API_URL=http://airflow-webserver:8080/api/v1
-ENV AIRFLOW_USERNAME=admin
-ENV AIRFLOW_PASSWORD=admin
-ENV MERN_API_URL=http://localhost:3000/api
-
-# Exposer le port
-EXPOSE 3000
-
-# Commande par défaut - exécute le script de lancement
-CMD ["/bin/bash", "/launch.sh"]
+# Commande par défaut - sera remplacée par docker-compose
+CMD ["tail", "-f", "/dev/null"]
