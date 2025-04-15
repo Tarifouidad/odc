@@ -1,182 +1,104 @@
-#!/usr/bin/env bash
-# Use this script to test if a given TCP host/port are available
+#!/bin/bash
 
-WAITFORIT_cmdname=${0##*/}
+# Définir la fonction de journalisation
+log() {
+  echo "$(date +'%Y-%m-%d %H:%M:%S') - $1"
+}
 
-echoerr() { if [[ $WAITFORIT_QUIET -ne 1 ]]; then echo "$@" 1>&2; fi }
+# Vérifier la présence de Node.js et npm
+log "Vérification de Node.js et npm..."
+if command -v node &> /dev/null && command -v npm &> /dev/null; then
+  node --version
+  npm --version
+  log "Node.js et npm sont correctement installés"
+else
+  log "ERREUR: Node.js et/ou npm ne sont pas installés"
+  # Continuer malgré l'erreur pour voir les autres problèmes potentiels
+fi
 
-usage()
-{
-    cat << USAGE >&2
-Usage:
-    $WAITFORIT_cmdname host:port [-s] [-t timeout] [-- command args]
-    -h HOST | --host=HOST       Host or IP under test
-    -p PORT | --port=PORT       TCP port under test
-                                Alternatively, you specify the host and port as host:port
-    -s | --strict               Only execute subcommand if the test succeeds
-    -q | --quiet                Don't output any status messages
-    -t TIMEOUT | --timeout=TIMEOUT
-                                Timeout in seconds, zero for no timeout
-    -- COMMAND ARGS             Execute command with args after the test finishes
-USAGE
+# Définir les variables d'environnement
+TALEND_DIR="/app/talend/jobs/CorrigeAge/"
+MERN_DIR="/app/mern"
+SHARED_DIR="/app/shared_data"
+
+# Créer les répertoires partagés s'ils n'existent pas
+log "Création des répertoires partagés..."
+mkdir -p "$SHARED_DIR" || log "Erreur lors de la création de $SHARED_DIR"
+mkdir -p "$SHARED_DIR/output" || log "Erreur lors de la création de $SHARED_DIR/output"
+mkdir -p "$SHARED_DIR/archive" || log "Erreur lors de la création de $SHARED_DIR/archive"
+chmod -R 777 "$SHARED_DIR" || log "Erreur lors de la modification des permissions de $SHARED_DIR"
+
+# Vérifier les permissions du répertoire partagé
+ls -la "$SHARED_DIR"
+
+# Attendre que le conteneur Airflow soit prêt
+log "Attente du démarrage d'Airflow..."
+if [ -f "/scripts/wait-for-it.sh" ]; then
+  chmod +x /scripts/wait-for-it.sh
+  /scripts/wait-for-it.sh airflow-webserver:8080 -t 60
+  WAIT_RESULT=$?
+  if [ $WAIT_RESULT -ne 0 ]; then
+    log "Impossible de se connecter à Airflow, mais on continue..."
+  else
+    log "Airflow est démarré et accessible"
+  fi
+else
+  log "AVERTISSEMENT: Script wait-for-it.sh introuvable, on ignore l'attente d'Airflow"
+fi
+
+# Démarrer l'application MERN depuis le bon répertoire
+log "Démarrage de l'application MERN..."
+if [ -d "$MERN_DIR" ]; then
+  cd "$MERN_DIR" || { log "Impossible d'accéder au répertoire $MERN_DIR"; exit 1; }
+else
+  log "Le répertoire MERN $MERN_DIR n'existe pas"
+  # Chercher un répertoire alternatif
+  if [ -d "/app/PFE" ]; then
+    log "Utilisation du répertoire /app/PFE à la place"
+    cd "/app/PFE" || { log "Impossible d'accéder au répertoire /app/PFE"; exit 1; }
+  else
+    log "Aucun répertoire d'application valide trouvé"
     exit 1
-}
-
-wait_for()
-{
-    if [[ $WAITFORIT_TIMEOUT -gt 0 ]]; then
-        echoerr "$WAITFORIT_cmdname: waiting $WAITFORIT_TIMEOUT seconds for $WAITFORIT_HOST:$WAITFORIT_PORT"
-    else
-        echoerr "$WAITFORIT_cmdname: waiting for $WAITFORIT_HOST:$WAITFORIT_PORT without a timeout"
-    fi
-    WAITFORIT_start_ts=$(date +%s)
-    while :
-    do
-        if [[ $WAITFORIT_ISBUSY -eq 1 ]]; then
-            nc -z $WAITFORIT_HOST $WAITFORIT_PORT
-            WAITFORIT_result=$?
-        else
-            (echo -n > /dev/tcp/$WAITFORIT_HOST/$WAITFORIT_PORT) >/dev/null 2>&1
-            WAITFORIT_result=$?
-        fi
-        if [[ $WAITFORIT_result -eq 0 ]]; then
-            WAITFORIT_end_ts=$(date +%s)
-            echoerr "$WAITFORIT_cmdname: $WAITFORIT_HOST:$WAITFORIT_PORT is available after $((WAITFORIT_end_ts - WAITFORIT_start_ts)) seconds"
-            break
-        fi
-        sleep 1
-    done
-    return $WAITFORIT_result
-}
-
-wait_for_wrapper()
-{
-    # In order to support SIGINT during timeout: http://unix.stackexchange.com/a/57692
-    if [[ $WAITFORIT_QUIET -eq 1 ]]; then
-        timeout $WAITFORIT_BUSYTIMEFLAG $WAITFORIT_TIMEOUT $0 --quiet --child --host=$WAITFORIT_HOST --port=$WAITFORIT_PORT --timeout=$WAITFORIT_TIMEOUT &
-    else
-        timeout $WAITFORIT_BUSYTIMEFLAG $WAITFORIT_TIMEOUT $0 --child --host=$WAITFORIT_HOST --port=$WAITFORIT_PORT --timeout=$WAITFORIT_TIMEOUT &
-    fi
-    WAITFORIT_PID=$!
-    trap "kill -INT -$WAITFORIT_PID" INT
-    wait $WAITFORIT_PID
-    WAITFORIT_RESULT=$?
-    if [[ $WAITFORIT_RESULT -ne 0 ]]; then
-        echoerr "$WAITFORIT_cmdname: timeout occurred after waiting $WAITFORIT_TIMEOUT seconds for $WAITFORIT_HOST:$WAITFORIT_PORT"
-    fi
-    return $WAITFORIT_RESULT
-}
-
-# process arguments
-while [[ $# -gt 0 ]]
-do
-    case "$1" in
-        *:* )
-        WAITFORIT_hostport=(${1//:/ })
-        WAITFORIT_HOST=${WAITFORIT_hostport[0]}
-        WAITFORIT_PORT=${WAITFORIT_hostport[1]}
-        shift 1
-        ;;
-        --child)
-        WAITFORIT_CHILD=1
-        shift 1
-        ;;
-        -q | --quiet)
-        WAITFORIT_QUIET=1
-        shift 1
-        ;;
-        -s | --strict)
-        WAITFORIT_STRICT=1
-        shift 1
-        ;;
-        -h)
-        WAITFORIT_HOST="$2"
-        if [[ $WAITFORIT_HOST == "" ]]; then break; fi
-        shift 2
-        ;;
-        --host=*)
-        WAITFORIT_HOST="${1#*=}"
-        shift 1
-        ;;
-        -p)
-        WAITFORIT_PORT="$2"
-        if [[ $WAITFORIT_PORT == "" ]]; then break; fi
-        shift 2
-        ;;
-        --port=*)
-        WAITFORIT_PORT="${1#*=}"
-        shift 1
-        ;;
-        -t)
-        WAITFORIT_TIMEOUT="$2"
-        if [[ $WAITFORIT_TIMEOUT == "" ]]; then break; fi
-        shift 2
-        ;;
-        --timeout=*)
-        WAITFORIT_TIMEOUT="${1#*=}"
-        shift 1
-        ;;
-        --)
-        shift
-        WAITFORIT_CLI=("$@")
-        break
-        ;;
-        --help)
-        usage
-        ;;
-        *)
-        echoerr "Unknown argument: $1"
-        usage
-        ;;
-    esac
-done
-
-if [[ "$WAITFORIT_HOST" == "" || "$WAITFORIT_PORT" == "" ]]; then
-    echoerr "Error: you need to provide a host and port to test."
-    usage
+  fi
 fi
 
-WAITFORIT_TIMEOUT=${WAITFORIT_TIMEOUT:-15}
-WAITFORIT_STRICT=${WAITFORIT_STRICT:-0}
-WAITFORIT_CHILD=${WAITFORIT_CHILD:-0}
-WAITFORIT_QUIET=${WAITFORIT_QUIET:-0}
+# Vérifier que package.json existe
+if [ ! -f "package.json" ]; then
+  log "Fichier package.json introuvable dans $(pwd)"
+  log "Contenu du répertoire actuel:"
+  ls -la
+    
+  # Rechercher dans les répertoires parents
+  log "Recherche de package.json dans d'autres répertoires..."
+  PACKAGE_PATH=$(find /app -name "package.json" -type f | head -n 1)
+  if [ -n "$PACKAGE_PATH" ]; then
+    log "Utilisation du package.json trouvé à $PACKAGE_PATH"
+    cd "$(dirname "$PACKAGE_PATH")" || { log "Impossible d'accéder au répertoire contenant package.json"; exit 1; }
+  else
+    log "Aucun package.json trouvé. Impossible de démarrer l'application."
+    exit 1
+  fi
+fi
 
-# Check to see if timeout is from busybox?
-WAITFORIT_TIMEOUT_PATH=$(type -p timeout)
-WAITFORIT_TIMEOUT_PATH=$(realpath $WAITFORIT_TIMEOUT_PATH 2>/dev/null || readlink -f $WAITFORIT_TIMEOUT_PATH)
+log "Contenu du répertoire courant ($(pwd)):"
+ls -la
 
-WAITFORIT_BUSYTIMEFLAG=""
-if [[ $WAITFORIT_TIMEOUT_PATH =~ "busybox" ]]; then
-    WAITFORIT_ISBUSY=1
-    # Check if busybox timeout uses -t flag
-    # (recent Alpine versions don't support -t anymore)
-    if timeout &>/dev/stdout | grep -q -e '-t '; then
-        WAITFORIT_BUSYTIMEFLAG="-t"
-    fi
+log "Vérification du contenu de package.json:"
+if [ -f "package.json" ]; then
+  cat package.json | grep -E "name|scripts.*start" || log "Format de package.json inattendu"
 else
-    WAITFORIT_ISBUSY=0
+  log "ERREUR: package.json toujours introuvable après la recherche"
+  exit 1
 fi
 
-if [[ $WAITFORIT_CHILD -gt 0 ]]; then
-    wait_for
-    WAITFORIT_RESULT=$?
-    exit $WAITFORIT_RESULT
+# Installer les dépendances si node_modules n'existe pas
+if [ ! -d "node_modules" ]; then
+  log "Installation des dépendances npm..."
+  npm install --no-audit --no-fund || { log "Erreur lors de l'installation des dépendances"; exit 1; }
 else
-    if [[ $WAITFORIT_TIMEOUT -gt 0 ]]; then
-        wait_for_wrapper
-        WAITFORIT_RESULT=$?
-    else
-        wait_for
-        WAITFORIT_RESULT=$?
-    fi
+  log "Le répertoire node_modules existe déjà"
 fi
 
-if [[ $WAITFORIT_CLI != "" ]]; then
-    if [[ $WAITFORIT_RESULT -ne 0 && $WAITFORIT_STRICT -eq 1 ]]; then
-        echoerr "$WAITFORIT_cmdname: strict mode, refusing to execute subprocess"
-        exit $WAITFORIT_RESULT
-    fi
-    exec "${WAITFORIT_CLI[@]}"
-else
-    exit $WAITFORIT_RESULT
-fi
+# Démarrer l'application
+log "Exécution de npm start dans $(pwd)"
+npm start
