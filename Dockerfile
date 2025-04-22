@@ -28,75 +28,46 @@ WORKDIR /opt/talend/jobs/CorrigeAge
 RUN chmod +x CorrigeAge/CorrigeAge_run.sh
 
 # Étape 3 : Airflow
-FROM base AS airflow
+FROM apache/airflow:latest AS airflow
 
-# Ajouter les utilisateurs et groupes
-RUN groupadd -r airflow && useradd -r -g airflow airflow
-
-# Installer Python et les dépendances
+# Ajouter les dépendances de système pour la compilation de packages Python
+USER root
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 \
-    python3-pip \
-    python3-setuptools \
+    build-essential \
     gcc \
-    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Créer le fichier requirements.txt pour les dépendances Python
-WORKDIR /tmp
-RUN echo "apache-airflow-providers-docker" > requirements.txt && \
-    echo "pandas>=1.5.0" >> requirements.txt && \
-    echo "xlrd>=2.0.1" >> requirements.txt && \
-    echo "openpyxl>=3.0.10" >> requirements.txt && \
-    echo "pyarrow>=12.0.0" >> requirements.txt
-
-# Installer les dépendances Python pour Airflow
-RUN pip3 install --no-cache-dir -r requirements.txt
-
-# Créer la structure de répertoires Airflow
-RUN mkdir -p /opt/airflow/dags /opt/airflow/logs /opt/airflow/plugins /opt/airflow/talend_jobs
-WORKDIR /opt/airflow
-
-# Copier les fichiers DAG et les jobs Talend
-COPY airflow/dags /opt/airflow/dags
-COPY talend/jobs /opt/airflow/talend_jobs
-
-# Configurer les permissions
-RUN find /opt/airflow/talend_jobs -name "*.sh" -type f -exec chmod +x {} \; && \
-    chown -R airflow:airflow /opt/airflow && \
-    mkdir -p /home/airflow && \
-    chown -R airflow:airflow /home/airflow
-
-# Passer à l'utilisateur airflow
+# Installer les packages Python directement
 USER airflow
+RUN pip install --no-cache-dir \
+    pandas \
+    openpyxl \
+    xlrd \
+    pyarrow \
+    && pip list | grep -E 'openpyxl|xlrd|pandas|pyarrow'
 
-# Étape 4 : Backend Node.js
-FROM node:20-slim AS backend
-WORKDIR /app/mern
+# Créer la structure de répertoires pour les jobs Talend
+USER root
+RUN mkdir -p /opt/airflow/talend_jobs
+COPY --chown=airflow:root talend/jobs /opt/airflow/talend_jobs
+RUN find /opt/airflow/talend_jobs -name "*.sh" -type f -exec chmod +x {} \;
 
-# Exposer le port
-EXPOSE 5000
+# Étape 4 : MERN préparation (NOUVEAU)
+FROM node:20-slim AS mern-base
+WORKDIR /app/mern/PFE
 
-# Étape 5 : Frontend React
-FROM node:20-slim AS frontend
-WORKDIR /app/frontend
-
-# Installer les dépendances nécessaires
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    git \
-    ca-certificates \
+# Installer les outils de base et esbuild
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && npm install -g npm@latest \
+    && npm install -D esbuild@0.25.0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Cette étape sera ignorée lors de la construction car nous monterons le code source
-# Mais nous définissons l'environnement pour être prêt
-ENV NODE_ENV=development
-ENV VITE_API_URL=http://mer_app:5000
+# Créer les répertoires nécessaires 
+RUN mkdir -p /app/mern/PFE/Frontend \
+    && mkdir -p /app/mern/PFE/Backend
 
-# Exposer le port pour le frontend
-EXPOSE 8081
-
-# Étape 6 : Image finale
+# Étape finale
 FROM airflow AS final
 
 # Passer à l'utilisateur root pour les opérations privilégiées
@@ -107,24 +78,42 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     docker.io \
     curl \
     gnupg \
-    netcat \
+    netcat-openbsd \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && node -v && npm -v \
     && rm -rf /var/lib/apt/lists/*
 
+# Installer esbuild avec la bonne version
+RUN npm install -g npm@latest \
+    && npm install -g esbuild@0.25.0
+
+# Créer un utilisateur node avec les mêmes UID/GID que dans l'image node officielle
+RUN groupadd --gid 1000 node \
+    && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+
 # Créer les répertoires partagés et définir les permissions appropriées
-RUN mkdir -p /app/mern/PFE /app/frontend && \
-    chown -R airflow:airflow /app && \
-    chmod -R 755 /app
+RUN mkdir -p /app/mern/PFE/Frontend \
+    && mkdir -p /app/mern/PFE/Backend \
+    && chown -R node:root /app \
+    && chmod -R g+w /app
 
 # Copier les scripts avec des permissions d'exécution
 COPY scripts /scripts
 RUN chmod -R +x /scripts && \
-    chown -R airflow:airflow /scripts
+    chown -R node:root /scripts && \
+    chmod -R g+w /scripts
 
-# Revenir à l'utilisateur airflow
-USER airflow
+# Vérifier que les packages Python sont bien installés
+RUN echo "Vérification des packages installés:" && \
+    su airflow -c "pip list | grep -E 'openpyxl|xlrd|pandas|pyarrow'"
 
-# Commande par défaut - sera remplacée par docker-compose
+# S'assurer que l'utilisateur airflow appartient au groupe root (GID=0)
+RUN usermod -a -G root airflow && \
+    usermod -a -G root node && \
+    id airflow && \
+    id node
+
+# Terminer avec l'utilisateur root
+USER root
 CMD ["tail", "-f", "/dev/null"]

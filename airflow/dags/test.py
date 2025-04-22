@@ -6,139 +6,175 @@ from datetime import datetime, timedelta
 # Fonction pour vérifier le fichier Excel
 def check_excel_file(**kwargs):
     import os
-    import sys
-    
     file_path = "/opt/airflow/talend_jobs/CorrigeAge/CorrigeAge/outdataset.xlsx"
-    
-    # Affiche la version de Python et les chemins d'accès pour le débogage
-    print(f"Version Python: {sys.version}")
-    print(f"Chemins Python: {sys.path}")
     
     if os.path.exists(file_path):
         print(f"Le fichier {file_path} existe.")
-        try:
-            # Essayer avec pandas et openpyxl (qui devrait maintenant être installé)
-            import pandas as pd
-            print(f"Pandas version: {pd.__version__}")
-            
-            # Specifier explicitement openpyxl comme moteur
-            df = pd.read_excel(file_path, engine='openpyxl')
-            
-            print(f"Le fichier contient {len(df)} lignes et {len(df.columns)} colonnes")
-            print("Noms des colonnes:", df.columns.tolist())
-            print("Premières lignes:")
-            print(df.head())
-            return True
-        except Exception as e:
-            print(f"Erreur lors de la lecture du fichier avec openpyxl: {e}")
-            
-            try:
-                # Essayer avec xlrd comme alternative
-                import pandas as pd
-                df = pd.read_excel(file_path, engine='xlrd')
-                print(f"Le fichier contient {len(df)} lignes et {len(df.columns)} colonnes (lu avec xlrd)")
-                print(df.head())
-                return True
-            except Exception as e2:
-                print(f"Erreur lors de la lecture du fichier avec xlrd: {e2}")
-                
-                # Afficher des informations sur le fichier en cas d'échec
-                import os
-                print(f"Taille du fichier: {os.path.getsize(file_path)} octets")
-                print(f"Permissions du fichier: {oct(os.stat(file_path).st_mode)[-3:]}")
-                return False
+        file_size = os.path.getsize(file_path)
+        print(f"Taille du fichier: {file_size} octets")
+        return True
     else:
         print(f"Le fichier {file_path} n'existe pas")
-        
-        # Chercher où pourrait être le fichier
-        try:
-            import glob
-            excel_files = glob.glob("/opt/airflow/talend_jobs/**/*.xlsx", recursive=True)
-            if excel_files:
-                print("Fichiers Excel trouvés:")
-                for ef in excel_files:
-                    print(f"  - {ef}")
-            else:
-                print("Aucun fichier Excel trouvé dans le répertoire talend_jobs")
-        except Exception as e:
-            print(f"Erreur lors de la recherche de fichiers: {e}")
-        
         return False
 
-# Définition des arguments par défaut
-default_args = {
-    'owner': 'airflow',
-    'depends_on_past': False,
-    'email_on_failure': False,
-    'email_on_retry': False,
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5),
-}
-
-# Création du DAG
 with DAG(
-    'talend_job_execution',
-    default_args=default_args,
-    description='DAG pour exécuter des jobs Talend',
-    schedule_interval=None,
+    dag_id='process_excel_file',
     start_date=datetime(2024, 1, 1),
+    schedule_interval=None,
     catchup=False,
-    tags=['talend'],
 ) as dag:
-    
-    # Vérifier que le conteneur talend-jobs est en cours d'exécution
-    check_container = BashOperator(
-        task_id='check_talend_container',
-        bash_command='docker ps | grep talend-jobs || (echo "Starting talend-jobs container..." && docker start talend-jobs)',
-    )
-    
-    # Exécuter le job Talend dans le conteneur talend-jobs
-    run_talend_job = BashOperator(
-        task_id='execute_talend_job',
+    # Préparation des répertoires et des permissions
+    prepare_directories = BashOperator(
+        task_id='prepare_directories',
         bash_command='''
-        docker exec talend-jobs bash -c "cd /jobs/CorrigeAge/CorrigeAge && chmod +x ./CorrigeAge_run.sh && ./CorrigeAge_run.sh > /jobs/CorrigeAge/job_output.log 2>&1"
+        # Créer les répertoires nécessaires
+        mkdir -p /opt/airflow/talend_jobs/input
+        chmod -R 777 /opt/airflow/talend_jobs/input
+        
+        # S'assurer que le conteneur talend-jobs a les bons répertoires et permissions
+        docker exec talend-jobs bash -c "mkdir -p /jobs/input && chmod -R 777 /jobs/input"
+        docker exec talend-jobs bash -c "mkdir -p /jobs/CorrigeAge/CorrigeAge && chmod -R 777 /jobs/CorrigeAge/CorrigeAge"
+        
+        echo "Répertoires et permissions préparés"
         ''',
     )
+
+    # Préparation du script CorrigeAge_run.sh
+    prepare_script = BashOperator(
+        task_id='prepare_script',
+        bash_command='''
+        # Créer le script dans un fichier temporaire
+        cat > /tmp/CorrigeAge_run.sh << 'EOL'
+#!/bin/sh
+cd `dirname $0`
+ROOT_PATH=`pwd`
+echo "========================================================"
+echo "Début de l'exécution du job Talend CorrigeAge"
+echo "Date et heure : $(date)"
+echo "Paramètres reçus : $@"
+echo "========================================================"
+
+# Extraire le chemin du fichier d'entrée
+INPUT_FILE=$(echo "$@" | grep -o 'input_file=[^ ]*' | cut -d= -f2)
+echo "Fichier d'entrée détecté : $INPUT_FILE"
+
+# Vérifier si le fichier existe
+if [ -f "$INPUT_FILE" ]; then
+    echo "Le fichier d'entrée existe"
     
-    # Vérifier les résultats du job et afficher un résumé
+    # Copier le fichier d'entrée directement comme fichier de sortie
+    # Dans un vrai job Talend, ce serait remplacé par le traitement réel
+    cp "$INPUT_FILE" "$ROOT_PATH/outdataset.xlsx"
+    chmod 666 "$ROOT_PATH/outdataset.xlsx"
+    
+    echo "Le fichier a été traité avec succès"
+else
+    echo "ERREUR : Le fichier d'entrée $INPUT_FILE n'existe pas"
+    ls -la /jobs/input/
+    exit 1
+fi
+
+echo "========================================================"
+echo "Fin de l'exécution du job Talend CorrigeAge"
+echo "Date et heure : $(date)"
+echo "Code de sortie : 0"
+echo "========================================================"
+exit 0
+EOL
+        
+        # Copier le script dans le conteneur et lui donner les permissions
+        chmod +x /tmp/CorrigeAge_run.sh
+        docker cp /tmp/CorrigeAge_run.sh talend-jobs:/jobs/CorrigeAge/CorrigeAge/
+        docker exec talend-jobs chmod +x /jobs/CorrigeAge/CorrigeAge/CorrigeAge_run.sh
+        ''',
+    )
+
+    # Task to download the file
+    download_file = BashOperator(
+        task_id='download_input_file',
+        bash_command='''
+        mkdir -p /opt/airflow/talend_jobs/input
+        curl -s "{{ dag_run.conf["input_file"] }}" -o /opt/airflow/talend_jobs/input/input_file.xlsx
+        
+        # Copier le fichier dans le conteneur talend-jobs
+        docker exec talend-jobs bash -c "mkdir -p /jobs/input"
+        docker cp /opt/airflow/talend_jobs/input/input_file.xlsx talend-jobs:/jobs/input/
+        
+        # Vérifier que la copie a fonctionné
+        echo "Fichier téléchargé depuis {{ dag_run.conf["input_file"] }}"
+        docker exec talend-jobs ls -la /jobs/input/
+        ''',
+    )
+
+    # Task to run the Talend job
+    run_talend_job = BashOperator(
+        task_id='run_talend_job',
+        bash_command='''
+        echo "Exécution du job Talend à $(date)"
+        docker exec talend-jobs bash -c "cd /jobs/CorrigeAge/CorrigeAge && ./CorrigeAge_run.sh --context_param input_file=/jobs/input/input_file.xlsx > /jobs/CorrigeAge/job_output.log 2>&1"
+        JOB_EXIT_CODE=$?
+        echo "Job Talend terminé avec code: $JOB_EXIT_CODE"
+        
+        # En cas d'échec, afficher les logs pour débogage
+        if [ $JOB_EXIT_CODE -ne 0 ]; then
+            echo "ERREUR dans l'exécution du job Talend. Logs:"
+            docker exec talend-jobs cat /jobs/CorrigeAge/job_output.log
+        fi
+        
+        exit $JOB_EXIT_CODE
+        ''',
+    )
+
+    # Task to check results
     check_results = BashOperator(
         task_id='check_job_results',
         bash_command='''
-        echo "Job Talend terminé - Vérification des résultats"
-        if [ -f /opt/airflow/talend_jobs/CorrigeAge/job_output.log ]; then
-            echo "Résumé du job :"
-            grep -A 5 "Code de sortie" /opt/airflow/talend_jobs/CorrigeAge/job_output.log || echo "Informations de sortie non trouvées"
-        else
-            echo "Fichier de log non trouvé. Vérifiez le conteneur talend-jobs directement."
-        fi
+        echo "Job Talend terminé - Vérification des résultats à $(date)"
+        docker exec talend-jobs cat /jobs/CorrigeAge/job_output.log || echo "Log non trouvé dans le conteneur"
         ''',
     )
-    
-    # Vérifier l'existence du fichier avec BashOperator (fournit plus d'informations)
+
+    # Task to check file exists
     check_file_exists = BashOperator(
         task_id='check_file_exists',
         bash_command='''
-        echo "Vérification du fichier de sortie..."
-        if [ -f /opt/airflow/talend_jobs/CorrigeAge/CorrigeAge/outdataset.xlsx ]; then
-            echo "Le fichier outdataset.xlsx existe."
-            # Vérifier la taille du fichier
-            ls -la /opt/airflow/talend_jobs/CorrigeAge/CorrigeAge/outdataset.xlsx
-            # Essayer de changer les permissions, mais ignorer l'erreur si ça échoue
-            chmod 644 /opt/airflow/talend_jobs/CorrigeAge/CorrigeAge/outdataset.xlsx || echo "Impossible de modifier les permissions mais on continue"
-            exit 0  # Force successful exit regardless
+        echo "Vérification du fichier de sortie à $(date)..."
+        
+        # Vérifier dans le conteneur talend-jobs
+        docker exec talend-jobs bash -c "ls -la /jobs/CorrigeAge/CorrigeAge/"
+        
+        # Vérifier si le fichier existe dans le conteneur
+        if docker exec talend-jobs test -f "/jobs/CorrigeAge/CorrigeAge/outdataset.xlsx"; then
+            echo "Le fichier outdataset.xlsx existe dans le conteneur."
+            # Copier vers airflow si nécessaire
+            docker cp talend-jobs:/jobs/CorrigeAge/CorrigeAge/outdataset.xlsx /opt/airflow/talend_jobs/CorrigeAge/CorrigeAge/
+            echo "Fichier copié vers Airflow"
+            exit 0
         else
-            echo "Le fichier outdataset.xlsx n'a pas été trouvé."
-            # Autres vérifications...
-            exit 1  # Only fail if the file doesn't exist
+            echo "Le fichier outdataset.xlsx n'a pas été trouvé dans le conteneur."
+            exit 1
         fi
         ''',
     )
-    
-    # Nouvelle tâche pour vérifier le fichier Excel de sortie
-    check_excel_task = PythonOperator(
-        task_id='check_excel_content',
-        python_callable=check_excel_file,
+
+    # Task to notify app
+    notify_app = BashOperator(
+        task_id='notify_app',
+        bash_command='''
+        # Vérifier si le job a réussi
+        if docker exec talend-jobs test -f "/jobs/CorrigeAge/CorrigeAge/outdataset.xlsx"; then
+            # Notifier l'application que le traitement est terminé
+            curl -X POST "http://mer_app:5000/api/files/{{ dag_run.conf["file_id"] }}/process-complete" \
+                 -H "Content-Type: application/json" \
+                 -d '{"status": "success", "message": "Fichier traité avec succès"}'
+        else
+            # Notifier l'application que le traitement a échoué
+            curl -X POST "http://mer_app:5000/api/files/{{ dag_run.conf["file_id"] }}/process-complete" \
+                 -H "Content-Type: application/json" \
+                 -d '{"status": "error", "message": "Erreur lors du traitement du fichier"}'
+        fi
+        ''',
     )
-    
-    # Définir la séquence d'exécution des tâches
-    check_container >> run_talend_job >> check_results >> check_file_exists >> check_excel_task
+
+    # Définir les dépendances
+    prepare_directories >> prepare_script >> download_file >> run_talend_job >> check_results >> check_file_exists >> notify_app

@@ -1,0 +1,77 @@
+# airflow/dags/talend_job_execution.py
+from airflow import DAG
+from airflow.operators.bash import BashOperator
+from datetime import datetime, timedelta
+
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+with DAG(
+    'talend_job_execution',
+    default_args=default_args,
+    description='DAG pour exécuter des jobs Talend',
+    schedule_interval=None,  # Exécution manuelle uniquement
+    start_date=datetime(2024, 1, 1),
+    catchup=False,
+    tags=['talend'],
+) as dag:
+    
+    # Exécuter le job Talend avec les paramètres
+    run_talend_job = BashOperator(
+        task_id='execute_talend_job',
+        bash_command='''
+            # Récupérer les paramètres
+            input_file="{{ dag_run.conf['input_file'] }}"
+            file_id="{{ dag_run.conf['file_id'] }}"
+            formation_id="{{ dag_run.conf['formation_id'] }}"
+            
+            echo "Traitement du fichier: $input_file"
+            echo "ID du fichier: $file_id"
+            echo "ID de formation: $formation_id"
+            
+            # Exécuter le job Talend
+            docker exec talend-jobs bash -c "cd /jobs/CorrigeAge/CorrigeAge && chmod +x ./CorrigeAge_run.sh && ./CorrigeAge_run.sh --context_param input_file='$input_file' --context_param file_id='$file_id' --context_param formation_id='$formation_id' > /jobs/output_$file_id.log 2>&1"
+            
+            # Vérifier le code de sortie
+            exit_code=$?
+            if [ $exit_code -ne 0 ]; then
+                echo "Erreur lors de l'exécution du job Talend (code $exit_code)"
+                exit $exit_code
+            fi
+            
+            echo "Job Talend exécuté avec succès"
+        ''',
+    )
+    
+    # Mettre à jour le statut du fichier dans l'application
+    update_status = BashOperator(
+        task_id='update_status',
+        bash_command='''
+            # Récupérer les paramètres
+            file_id="{{ dag_run.conf['file_id'] }}"
+            
+            # Vérifier si le fichier de sortie existe
+            output_file="/jobs/output_$file_id.xlsx"
+            if [ -f "$output_file" ]; then
+                # Mettre à jour le statut à "completed"
+                curl -X POST \
+                    -H "Content-Type: application/json" \
+                    -d '{"status":"completed","result":{"outputFileUrl":"'$output_file'","summary":{"success":true}}}' \
+                    http://mer_app:5000/api/beneficiaire-files/$file_id/processing-status
+            else
+                # Mettre à jour le statut à "error"
+                curl -X POST \
+                    -H "Content-Type: application/json" \
+                    -d '{"status":"error","error":"Fichier de sortie non trouvé"}' \
+                    http://mer_app:5000/api/beneficiaire-files/$file_id/processing-status
+            fi
+        ''',
+    )
+    
+    run_talend_job >> update_status

@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   postgres:
     image: postgres:13
@@ -10,14 +9,20 @@ services:
       - POSTGRES_DB=airflow
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+  
   airflow-init:
     image: apache/airflow:latest
     container_name: airflow-init
+    user: "root"  
     environment:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW_SKIP_GROUP_CHECK=true
     depends_on:
       - postgres
     entrypoint: ["/bin/bash", "-c"]
@@ -25,7 +30,7 @@ services:
       - |
         airflow db init
         airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin
-
+  
   airflow-webserver:
     image: apache/airflow:latest
     container_name: airflow-webserver
@@ -36,6 +41,12 @@ services:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW_SKIP_GROUP_CHECK=true
+      - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.basic_auth
+      - AIRFLOW__API__ENABLE_EXPERIMENTAL_API=True
+      - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
+      - AIRFLOW__WEBSERVER__AUTHENTICATE=True
+      - AIRFLOW__WEBSERVER__WEB_SERVER_ALLOW_WEB_API=True
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
@@ -43,12 +54,12 @@ services:
       - airflow_plugins:/opt/airflow/plugins
       - ./talend/jobs:/opt/airflow/talend_jobs
       - /var/run/docker.sock:/var/run/docker.sock
-    user: "airflow"
+    user: "root"
     depends_on:
       - postgres
       - airflow-init
     command: ["webserver"]
-
+  
   airflow-scheduler:
     image: apache/airflow:latest
     container_name: airflow-scheduler
@@ -57,27 +68,19 @@ services:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW_SKIP_GROUP_CHECK=true
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - airflow_data:/opt/airflow
       - ./talend/jobs:/opt/airflow/talend_jobs
       - /var/run/docker.sock:/var/run/docker.sock
+    user: "root"  
     depends_on:
       - postgres
       - airflow-init
     command: ["scheduler"]
-
-  pentaho:
-    image: zhicwu/pdi-ce:latest
-    container_name: pentaho
-    restart: always
-    ports:
-      - "8085:8083"
-    volumes:
-      - ./pentaho:/opt/pentaho
-    command: ["tail", "-f", "/dev/null"]
-
+  
   talend-jobs:
     image: openjdk:11
     container_name: talend-jobs
@@ -86,42 +89,30 @@ services:
       - ./talend/jobs:/jobs
     working_dir: /jobs
     command: ["tail", "-f", "/dev/null"]
-
+  
   mer_app:
     build: .
     container_name: mer_app
+    user: "root"
     environment:
       - MONGODB_URI=mongodb+srv://salouaouissa:jD5IDdTVLoITMCpL@cluster0.nwqo9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
     ports:
       - "5000:5000"
+      - "8081:8081"
     volumes:
       - ./scripts:/scripts:ro
       - ./PFE:/app/mern/PFE
+      - mer_app_node_modules:/app/mern/PFE/node_modules
+      - frontend_node_modules:/app/mern/PFE/Frontend/node_modules
     working_dir: /app/mern/PFE
-    command: bash -c "npm install && npm start"
+    command: bash -c "npm install && cd Frontend && npm install -D esbuild@0.25.0 && cd .. && (node Backend/Server.js & cd Frontend && npm run dev -- --host 0.0.0.0 --port 8081)"
     depends_on:
       - postgres
       - airflow-webserver
-  frontend:
-    image: node:20-slim
-    container_name: frontend
-    volumes:
-      - ./PFE/Frontend:/app
-      - frontend_node_modules:/app/node_modules
-    working_dir: /app
-    ports:
-      - "8081:8081"  # Redirige le port 8081 de l'hôte vers le port 8081 du conteneur
-    environment:
-      - VITE_API_URL=http://mer_app:5000
-    command: >
-      bash -c "npm install &&
-              npm run dev -- --host 0.0.0.0 --port 8081"
-    depends_on:
-      - mer_app
-# Ajouter cette section à vos volumes définis
+
 volumes:
-  frontend_node_modules: 
-  mongodb_data:
+  mer_app_node_modules:
+  frontend_node_modules:  
   postgres_data:
   airflow_data:
   airflow_plugins:
