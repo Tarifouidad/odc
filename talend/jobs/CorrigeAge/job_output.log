@@ -1,11 +1,28 @@
 ========================================================
 Début de l'exécution du job Talend CorrigeAge
-Date et heure : Mon Apr 21 19:56:45 UTC 2025
+Date et heure : Fri Apr 25 14:47:51 UTC 2025
 Paramètres reçus : 
 ========================================================
 Fichier d'entrée détecté : 
 ERREUR : Le fichier d'entrée  n'existe pas
-total 28
-drwxrwxrwx 1 root root  4096 Apr 17 16:00 .
-drwxrwxrwx 1 root root  4096 Apr 17 14:04 ..
--rwxrwxrwx 1 root root 28448 Apr 17 16:00 input_file.xlsx
+total 436
+drwxrwxrwx 1 root root  4096 Apr 25 14:11 .
+drwxrwxrwx 1 root root  4096 Apr 25 09:39 ..
+-rwxrwxrwx 1 root root 20992 Apr 25 09:39 input_680b58694c49b3e35e9c1ad4.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 09:48 input_680b5a7e4c49b3e35e9c1b62.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 09:50 input_680b5ad84c49b3e35e9c1b66.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 09:52 input_680b5b424c49b3e35e9c1bec.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 11:14 input_680b6e9c1aa7983fc3911c4c.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 11:29 input_680b72221aa7983fc3911ce0.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 11:42 input_680b751a3f19b3c9a48272a8.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 11:50 input_680b76e63f19b3c9a4827343.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 11:54 input_680b77d43f19b3c9a48273e1.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 12:14 input_680b7c8d7add3e531c6de1b2.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 13:46 input_680b92307add3e531c6de250.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 13:50 input_680b93297add3e531c6de2db.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 13:54 input_680b94267add3e531c6de34e.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 13:57 input_680b94c67add3e531c6de383.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 14:02 input_680b95f47add3e531c6de3f6.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 14:04 input_680b96547add3e531c6de42b.xlsx
+-rwxrwxrwx 1 root root 26350 Apr 25 14:10 input_680b97bc7add3e531c6de49e.xlsx
+-rwxrwxrwx 1 root root 20992 Apr 25 14:11 input_680b98187add3e531c6de4ca.xlsx

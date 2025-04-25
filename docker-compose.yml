@@ -15,9 +15,8 @@ services:
       retries: 5
   
   airflow-init:
-    image: apache/airflow:latest
+    image: apache/airflow:2.3.4
     container_name: airflow-init
-    user: "root"  
     environment:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
@@ -25,14 +24,13 @@ services:
       - AIRFLOW_SKIP_GROUP_CHECK=true
     depends_on:
       - postgres
-    entrypoint: ["/bin/bash", "-c"]
-    command:
-      - |
-        airflow db init
+    command: >
+      bash -c "
+        airflow db init &&
         airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin
-  
+      "
   airflow-webserver:
-    image: apache/airflow:latest
+    image: apache/airflow:2.3.4
     container_name: airflow-webserver
     restart: always
     ports:
@@ -47,6 +45,7 @@ services:
       - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
       - AIRFLOW__WEBSERVER__AUTHENTICATE=True
       - AIRFLOW__WEBSERVER__WEB_SERVER_ALLOW_WEB_API=True
+      
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
@@ -59,9 +58,9 @@ services:
       - postgres
       - airflow-init
     command: ["webserver"]
-  
+
   airflow-scheduler:
-    image: apache/airflow:latest
+    image: apache/airflow:2.3.4
     container_name: airflow-scheduler
     restart: always
     environment:
@@ -75,12 +74,12 @@ services:
       - airflow_data:/opt/airflow
       - ./talend/jobs:/opt/airflow/talend_jobs
       - /var/run/docker.sock:/var/run/docker.sock
-    user: "root"  
+    user: "root"
     depends_on:
       - postgres
       - airflow-init
     command: ["scheduler"]
-  
+
   talend-jobs:
     image: openjdk:11
     container_name: talend-jobs
@@ -89,7 +88,7 @@ services:
       - ./talend/jobs:/jobs
     working_dir: /jobs
     command: ["tail", "-f", "/dev/null"]
-  
+
   mer_app:
     build: .
     container_name: mer_app
