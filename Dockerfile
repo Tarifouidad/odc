@@ -19,14 +19,14 @@ ENV PATH=$JAVA_HOME/bin:$PATH
 
 # Créer le répertoire pour les jobs Talend
 RUN mkdir -p /opt/talend/jobs/CorrigeAge/CorrigeAge
-RUN mkdir -p /opt/talend/jobs/CorrigeAge/jobETL
+RUN mkdir -p /opt/talend/jobs/jobETL/jobETL
 # Copier les fichiers Talend (job exporté)
-COPY talend/jobs/CorrigeAge /opt/talend/jobs/CorrigeAge
-WORKDIR /opt/talend/jobs/CorrigeAge
+COPY talend/jobs/ /opt/talend/jobs/
+WORKDIR /opt/talend/jobs/
 
 # S'assurer que le script d'exécution est exécutable
-RUN chmod +x CorrigeAge/CorrigeAge_run.sh
-RUN chmod +x /CorrigeAge_run/JobETL_run.sh
+RUN chmod +x /CorrigeAge/CorrigeAge/CorrigeAge_run.sh
+RUN chmod +x /jobETL/jobETL/JobETL_run.sh
 
 # Étape 3 : Airflow
 FROM apache/airflow:latest AS airflow

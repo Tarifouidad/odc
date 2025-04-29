@@ -3481,75 +3481,157 @@ out1Struct row2 = out1;
 		boolean headerIsInserted_tFileOutputExcel_1 = false;
 		
 		
-		String fileName_tFileOutputExcel_1="C:/Users/LENOVO/Desktop/stage PFE/OutputAge.xlsx";
 		int nb_line_tFileOutputExcel_1 = 0;
-		org.talend.ExcelTool xlsxTool_tFileOutputExcel_1 = new org.talend.ExcelTool();
-		
-    xlsxTool_tFileOutputExcel_1.setTruncateExceedingCharacters(false);
-		xlsxTool_tFileOutputExcel_1.setSheet("Beneficiaires");
-		xlsxTool_tFileOutputExcel_1.setAppend(false,false, false);
-		xlsxTool_tFileOutputExcel_1.setRecalculateFormula(false);
-		xlsxTool_tFileOutputExcel_1.setXY(false,0,0,false);
-		
-		java.util.concurrent.ConcurrentHashMap<java.lang.Object, java.lang.Object> chm_tFileOutputExcel_1 = (java.util.concurrent.ConcurrentHashMap<java.lang.Object, java.lang.Object>) globalMap.get("concurrentHashMap");
-		java.lang.Object lockObj_tFileOutputExcel_1 = chm_tFileOutputExcel_1.computeIfAbsent("EXCEL_OUTPUT_LOCK_OBJ_tFileOutputExcel_1", k -> new Object());
-		synchronized (lockObj_tFileOutputExcel_1) {
-			
-				xlsxTool_tFileOutputExcel_1.prepareXlsxFile(fileName_tFileOutputExcel_1);
-			
+
+		String fileName_tFileOutputExcel_1="outdataset.xlsx";
+		java.io.File file_tFileOutputExcel_1 = new java.io.File(fileName_tFileOutputExcel_1);
+		boolean isFileGenerated_tFileOutputExcel_1 = true;
+//create directory only if not exists
+          java.io.File parentFile_tFileOutputExcel_1 = file_tFileOutputExcel_1.getParentFile();
+          if (parentFile_tFileOutputExcel_1 != null && !parentFile_tFileOutputExcel_1.exists()) {
+        	
+             parentFile_tFileOutputExcel_1.mkdirs();
+        	
+          }
+
+		jxl.write.WritableWorkbook writeableWorkbook_tFileOutputExcel_1 = null;
+		jxl.write.WritableSheet writableSheet_tFileOutputExcel_1 = null;
+
+		jxl.WorkbookSettings workbookSettings_tFileOutputExcel_1 = new jxl.WorkbookSettings();
+        workbookSettings_tFileOutputExcel_1.setEncoding("UTF-8");
+		writeableWorkbook_tFileOutputExcel_1 = new jxl.write.biff.WritableWorkbookImpl(
+            		new java.io.BufferedOutputStream(new java.io.FileOutputStream(fileName_tFileOutputExcel_1)),
+            		true,
+            		workbookSettings_tFileOutputExcel_1);
+
+        writableSheet_tFileOutputExcel_1 = writeableWorkbook_tFileOutputExcel_1.getSheet("Beneficiaires");
+        if(writableSheet_tFileOutputExcel_1 == null){
+        	writableSheet_tFileOutputExcel_1 = writeableWorkbook_tFileOutputExcel_1.createSheet("Beneficiaires", writeableWorkbook_tFileOutputExcel_1.getNumberOfSheets());
 		}
-		
-		xlsxTool_tFileOutputExcel_1.setFont("");
-		
-		if (xlsxTool_tFileOutputExcel_1.getStartRow() == 0){
-		
-		xlsxTool_tFileOutputExcel_1.addRow();
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Horodateur");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Confirmation_Appel");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Confirmation_E_mail");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Email");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Prenom");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Nom");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Genre");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Date_de_naissance");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Pays");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Situation_Profetionnelle");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Profession");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Votre_age");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Telelphone");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Niveau_d_etudes");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Avez_vous_une_experience_avec_la_gestion_de_projet");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Votre_specialite");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Etablissement");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("Avez_vous_deja_participe_au_programmes_ODC");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("categorieAge");
-		
-		xlsxTool_tFileOutputExcel_1.addCellValue("isStaurate");
-		
-		nb_line_tFileOutputExcel_1++;
+
+
+        //modif start
+        int startRowNum_tFileOutputExcel_1 = writableSheet_tFileOutputExcel_1.getRows();
+		//modif end
+
+		int[] fitWidth_tFileOutputExcel_1 = new int[20];
+		for(int i_tFileOutputExcel_1=0;i_tFileOutputExcel_1<20;i_tFileOutputExcel_1++){
+		    int fitCellViewSize_tFileOutputExcel_1=writableSheet_tFileOutputExcel_1.getColumnView(i_tFileOutputExcel_1).getSize();
+			fitWidth_tFileOutputExcel_1[i_tFileOutputExcel_1]=fitCellViewSize_tFileOutputExcel_1/256;
+			if(fitCellViewSize_tFileOutputExcel_1%256!=0){
+				fitWidth_tFileOutputExcel_1[i_tFileOutputExcel_1]+=1;
+			}
+		}
+
+						final jxl.write.WritableCellFormat cell_format_Date_de_naissance_tFileOutputExcel_1=new jxl.write.WritableCellFormat(new jxl.write.DateFormat("dd/MM/yyyy"));
+
+
+		if (startRowNum_tFileOutputExcel_1 == 0){
+	//modif end
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(0, nb_line_tFileOutputExcel_1, "Horodateur"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[0]=fitWidth_tFileOutputExcel_1[0]>10?fitWidth_tFileOutputExcel_1[0]:10;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(1, nb_line_tFileOutputExcel_1, "Confirmation_Appel"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[1]=fitWidth_tFileOutputExcel_1[1]>18?fitWidth_tFileOutputExcel_1[1]:18;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(2, nb_line_tFileOutputExcel_1, "Confirmation_E_mail"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[2]=fitWidth_tFileOutputExcel_1[2]>19?fitWidth_tFileOutputExcel_1[2]:19;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(3, nb_line_tFileOutputExcel_1, "Email"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[3]=fitWidth_tFileOutputExcel_1[3]>5?fitWidth_tFileOutputExcel_1[3]:5;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(4, nb_line_tFileOutputExcel_1, "Prenom"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[4]=fitWidth_tFileOutputExcel_1[4]>6?fitWidth_tFileOutputExcel_1[4]:6;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(5, nb_line_tFileOutputExcel_1, "Nom"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[5]=fitWidth_tFileOutputExcel_1[5]>3?fitWidth_tFileOutputExcel_1[5]:3;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(6, nb_line_tFileOutputExcel_1, "Genre"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[6]=fitWidth_tFileOutputExcel_1[6]>5?fitWidth_tFileOutputExcel_1[6]:5;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(7, nb_line_tFileOutputExcel_1, "Date_de_naissance"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[7]=fitWidth_tFileOutputExcel_1[7]>17?fitWidth_tFileOutputExcel_1[7]:17;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(8, nb_line_tFileOutputExcel_1, "Pays"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[8]=fitWidth_tFileOutputExcel_1[8]>4?fitWidth_tFileOutputExcel_1[8]:4;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(9, nb_line_tFileOutputExcel_1, "Situation_Profetionnelle"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[9]=fitWidth_tFileOutputExcel_1[9]>24?fitWidth_tFileOutputExcel_1[9]:24;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(10, nb_line_tFileOutputExcel_1, "Profession"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[10]=fitWidth_tFileOutputExcel_1[10]>10?fitWidth_tFileOutputExcel_1[10]:10;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(11, nb_line_tFileOutputExcel_1, "Votre_age"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[11]=fitWidth_tFileOutputExcel_1[11]>9?fitWidth_tFileOutputExcel_1[11]:9;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(12, nb_line_tFileOutputExcel_1, "Telelphone"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[12]=fitWidth_tFileOutputExcel_1[12]>10?fitWidth_tFileOutputExcel_1[12]:10;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(13, nb_line_tFileOutputExcel_1, "Niveau_d_etudes"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[13]=fitWidth_tFileOutputExcel_1[13]>15?fitWidth_tFileOutputExcel_1[13]:15;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(14, nb_line_tFileOutputExcel_1, "Avez_vous_une_experience_avec_la_gestion_de_projet"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[14]=fitWidth_tFileOutputExcel_1[14]>50?fitWidth_tFileOutputExcel_1[14]:50;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(15, nb_line_tFileOutputExcel_1, "Votre_specialite"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[15]=fitWidth_tFileOutputExcel_1[15]>16?fitWidth_tFileOutputExcel_1[15]:16;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(16, nb_line_tFileOutputExcel_1, "Etablissement"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[16]=fitWidth_tFileOutputExcel_1[16]>13?fitWidth_tFileOutputExcel_1[16]:13;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(17, nb_line_tFileOutputExcel_1, "Avez_vous_deja_participe_au_programmes_ODC"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[17]=fitWidth_tFileOutputExcel_1[17]>42?fitWidth_tFileOutputExcel_1[17]:42;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(18, nb_line_tFileOutputExcel_1, "categorieAge"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[18]=fitWidth_tFileOutputExcel_1[18]>12?fitWidth_tFileOutputExcel_1[18]:12;
+		//modif start
+			writableSheet_tFileOutputExcel_1.addCell(new jxl.write.Label(19, nb_line_tFileOutputExcel_1, "isStaurate"
+			));
+		//modif end
+		fitWidth_tFileOutputExcel_1[19]=fitWidth_tFileOutputExcel_1[19]>10?fitWidth_tFileOutputExcel_1[19]:10;
+		nb_line_tFileOutputExcel_1 ++;
 		headerIsInserted_tFileOutputExcel_1 = true;
-		
 	}
-		
+
 
  
 
@@ -4535,166 +4617,507 @@ if(out1 != null) {
 					}
 					
 
-				xlsxTool_tFileOutputExcel_1.addRow();
-									   				
+								   				
 	    				if(out1.Horodateur != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Horodateur));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 0;
+					
+
+					
+						jxl.write.WritableCell cell_0_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Horodateur
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_0_tFileOutputExcel_1);
+							int currentWith_0_tFileOutputExcel_1 = cell_0_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[0]=fitWidth_tFileOutputExcel_1[0]>currentWith_0_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[0]:currentWith_0_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Confirmation_Appel != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Confirmation_Appel));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 1;
+					
+
+					
+						jxl.write.WritableCell cell_1_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Confirmation_Appel
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_1_tFileOutputExcel_1);
+							int currentWith_1_tFileOutputExcel_1 = cell_1_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[1]=fitWidth_tFileOutputExcel_1[1]>currentWith_1_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[1]:currentWith_1_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Confirmation_E_mail != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Confirmation_E_mail));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 2;
+					
+
+					
+						jxl.write.WritableCell cell_2_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Confirmation_E_mail
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_2_tFileOutputExcel_1);
+							int currentWith_2_tFileOutputExcel_1 = cell_2_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[2]=fitWidth_tFileOutputExcel_1[2]>currentWith_2_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[2]:currentWith_2_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Email != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Email));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 3;
+					
+
+					
+						jxl.write.WritableCell cell_3_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Email
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_3_tFileOutputExcel_1);
+							int currentWith_3_tFileOutputExcel_1 = cell_3_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[3]=fitWidth_tFileOutputExcel_1[3]>currentWith_3_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[3]:currentWith_3_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Prenom != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Prenom));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 4;
+					
+
+					
+						jxl.write.WritableCell cell_4_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Prenom
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_4_tFileOutputExcel_1);
+							int currentWith_4_tFileOutputExcel_1 = cell_4_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[4]=fitWidth_tFileOutputExcel_1[4]>currentWith_4_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[4]:currentWith_4_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Nom != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Nom));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 5;
+					
+
+					
+						jxl.write.WritableCell cell_5_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Nom
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_5_tFileOutputExcel_1);
+							int currentWith_5_tFileOutputExcel_1 = cell_5_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[5]=fitWidth_tFileOutputExcel_1[5]>currentWith_5_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[5]:currentWith_5_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Genre != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Genre));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 6;
+					
+
+					
+						jxl.write.WritableCell cell_6_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Genre
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_6_tFileOutputExcel_1);
+							int currentWith_6_tFileOutputExcel_1 = cell_6_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[6]=fitWidth_tFileOutputExcel_1[6]>currentWith_6_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[6]:currentWith_6_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Date_de_naissance != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(out1.Date_de_naissance, "dd/MM/yyyy");
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 7;
+					
+
+					
+						jxl.write.WritableCell cell_7_tFileOutputExcel_1 = new jxl.write.DateTime(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Date_de_naissance, cell_format_Date_de_naissance_tFileOutputExcel_1
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_7_tFileOutputExcel_1);
+							int currentWith_7_tFileOutputExcel_1 = cell_7_tFileOutputExcel_1.getContents().trim().length();
+							currentWith_7_tFileOutputExcel_1=12;
+							fitWidth_tFileOutputExcel_1[7]=fitWidth_tFileOutputExcel_1[7]>currentWith_7_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[7]:currentWith_7_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Pays != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Pays));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 8;
+					
+
+					
+						jxl.write.WritableCell cell_8_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Pays
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_8_tFileOutputExcel_1);
+							int currentWith_8_tFileOutputExcel_1 = cell_8_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[8]=fitWidth_tFileOutputExcel_1[8]>currentWith_8_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[8]:currentWith_8_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Situation_Profetionnelle != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Situation_Profetionnelle));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 9;
+					
+
+					
+						jxl.write.WritableCell cell_9_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Situation_Profetionnelle
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_9_tFileOutputExcel_1);
+							int currentWith_9_tFileOutputExcel_1 = cell_9_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[9]=fitWidth_tFileOutputExcel_1[9]>currentWith_9_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[9]:currentWith_9_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Profession != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Profession));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 10;
+					
+
+					
+						jxl.write.WritableCell cell_10_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Profession
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_10_tFileOutputExcel_1);
+							int currentWith_10_tFileOutputExcel_1 = cell_10_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[10]=fitWidth_tFileOutputExcel_1[10]>currentWith_10_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[10]:currentWith_10_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Votre_age != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(Double.parseDouble(String.valueOf(out1.Votre_age)));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 11;
+					
+
+					
+						jxl.write.WritableCell cell_11_tFileOutputExcel_1 = new jxl.write.Number(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Votre_age
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_11_tFileOutputExcel_1);
+							int currentWith_11_tFileOutputExcel_1 = String.valueOf(((jxl.write.Number)cell_11_tFileOutputExcel_1).getValue()).trim().length();
+							currentWith_11_tFileOutputExcel_1=currentWith_11_tFileOutputExcel_1>10?10:currentWith_11_tFileOutputExcel_1;
+							fitWidth_tFileOutputExcel_1[11]=fitWidth_tFileOutputExcel_1[11]>currentWith_11_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[11]:currentWith_11_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Telelphone != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Telelphone));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 12;
+					
+
+					
+						jxl.write.WritableCell cell_12_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Telelphone
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_12_tFileOutputExcel_1);
+							int currentWith_12_tFileOutputExcel_1 = cell_12_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[12]=fitWidth_tFileOutputExcel_1[12]>currentWith_12_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[12]:currentWith_12_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Niveau_d_etudes != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Niveau_d_etudes));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 13;
+					
+
+					
+						jxl.write.WritableCell cell_13_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Niveau_d_etudes
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_13_tFileOutputExcel_1);
+							int currentWith_13_tFileOutputExcel_1 = cell_13_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[13]=fitWidth_tFileOutputExcel_1[13]>currentWith_13_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[13]:currentWith_13_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Avez_vous_une_experience_avec_la_gestion_de_projet != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Avez_vous_une_experience_avec_la_gestion_de_projet));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 14;
+					
+
+					
+						jxl.write.WritableCell cell_14_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Avez_vous_une_experience_avec_la_gestion_de_projet
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_14_tFileOutputExcel_1);
+							int currentWith_14_tFileOutputExcel_1 = cell_14_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[14]=fitWidth_tFileOutputExcel_1[14]>currentWith_14_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[14]:currentWith_14_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Votre_specialite != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Votre_specialite));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 15;
+					
+
+					
+						jxl.write.WritableCell cell_15_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Votre_specialite
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_15_tFileOutputExcel_1);
+							int currentWith_15_tFileOutputExcel_1 = cell_15_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[15]=fitWidth_tFileOutputExcel_1[15]>currentWith_15_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[15]:currentWith_15_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Etablissement != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Etablissement));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 16;
+					
+
+					
+						jxl.write.WritableCell cell_16_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Etablissement
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_16_tFileOutputExcel_1);
+							int currentWith_16_tFileOutputExcel_1 = cell_16_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[16]=fitWidth_tFileOutputExcel_1[16]>currentWith_16_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[16]:currentWith_16_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.Avez_vous_deja_participe_au_programmes_ODC != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.Avez_vous_deja_participe_au_programmes_ODC));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 17;
+					
+
+					
+						jxl.write.WritableCell cell_17_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.Avez_vous_deja_participe_au_programmes_ODC
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_17_tFileOutputExcel_1);
+							int currentWith_17_tFileOutputExcel_1 = cell_17_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[17]=fitWidth_tFileOutputExcel_1[17]>currentWith_17_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[17]:currentWith_17_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.categorieAge != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.categorieAge));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
 					
-									   				
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 18;
+					
+
+					
+						jxl.write.WritableCell cell_18_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.categorieAge
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_18_tFileOutputExcel_1);
+							int currentWith_18_tFileOutputExcel_1 = cell_18_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[18]=fitWidth_tFileOutputExcel_1[18]>currentWith_18_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[18]:currentWith_18_tFileOutputExcel_1+2;
+	    				} 
+					
+								   				
 	    				if(out1.isStaurate != null) {
     				
-							xlsxTool_tFileOutputExcel_1.addCellValue(String.valueOf(out1.isStaurate));
-	    				} else {
-	    					xlsxTool_tFileOutputExcel_1.addCellNullValue();
-	    				}
+					
+//modif start
+					
+						columnIndex_tFileOutputExcel_1 = 19;
+					
+
+					
+						jxl.write.WritableCell cell_19_tFileOutputExcel_1 = new jxl.write.Label(columnIndex_tFileOutputExcel_1, startRowNum_tFileOutputExcel_1 + nb_line_tFileOutputExcel_1,
+					
+//modif end
+								out1.isStaurate
+							);
+//modif start					
+							//If we keep the cell format from the existing cell in sheet
+							
+							
+//modif ends							
+							writableSheet_tFileOutputExcel_1.addCell(cell_19_tFileOutputExcel_1);
+							int currentWith_19_tFileOutputExcel_1 = cell_19_tFileOutputExcel_1.getContents().trim().length();
+							fitWidth_tFileOutputExcel_1[19]=fitWidth_tFileOutputExcel_1[19]>currentWith_19_tFileOutputExcel_1?fitWidth_tFileOutputExcel_1[19]:currentWith_19_tFileOutputExcel_1+2;
+	    				} 
 					
     			nb_line_tFileOutputExcel_1++;
 				
@@ -5408,11 +5831,8 @@ end_Hash.put("tMap_1", System.currentTimeMillis());
 
 	
 
-	
-	
-	
-			xlsxTool_tFileOutputExcel_1.writeExcel(fileName_tFileOutputExcel_1,true);
-	
+		writeableWorkbook_tFileOutputExcel_1.write();
+		writeableWorkbook_tFileOutputExcel_1.close();
 		if(headerIsInserted_tFileOutputExcel_1 && nb_line_tFileOutputExcel_1 > 0){
 			nb_line_tFileOutputExcel_1 = nb_line_tFileOutputExcel_1 -1;
 		}
@@ -6056,6 +6476,6 @@ if (execStat) {
     ResumeUtil resumeUtil = null;
 }
 /************************************************************************************************
- *     147602 characters generated by Talend Open Studio for Data Integration 
- *     on the 21 avril 2025 à 16:16:40 WEST
+ *     165482 characters generated by Talend Open Studio for Data Integration 
+ *     on the 28 avril 2025 à 10:30:01 WEST
  ************************************************************************************************/
