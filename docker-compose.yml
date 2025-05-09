@@ -1,5 +1,16 @@
 version: '3.8'
 services:
+  # Initialize shared directory structure
+  init-shared:
+    image: busybox
+    container_name: init-shared
+    command: >
+      sh -c "mkdir -p /shared_data/input /shared_data/output /shared_data/temp &&
+            chmod -R 777 /shared_data"
+    volumes:
+      - shared_data:/shared_data
+    user: "root"
+
   postgres:
     image: postgres:13
     container_name: postgres
@@ -22,13 +33,18 @@ services:
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
       - AIRFLOW_SKIP_GROUP_CHECK=true
+      - SHARED_DATA_DIR=/shared_data
+      - SHARED_INPUT_DIR=/shared_data/input
+      - SHARED_OUTPUT_DIR=/shared_data/output
     depends_on:
       - postgres
+      - init-shared
     command: >
       bash -c "
         airflow db init &&
         airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin
       "
+  
   airflow-webserver:
     image: apache/airflow:2.10.5
     container_name: airflow-webserver
@@ -45,7 +61,9 @@ services:
       - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
       - AIRFLOW__WEBSERVER__AUTHENTICATE=True
       - AIRFLOW__WEBSERVER__WEB_SERVER_ALLOW_WEB_API=True
-      
+      - SHARED_DATA_DIR=/shared_data
+      - SHARED_INPUT_DIR=/shared_data/input
+      - SHARED_OUTPUT_DIR=/shared_data/output
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
@@ -53,12 +71,14 @@ services:
       - airflow_plugins:/opt/airflow/plugins
       - ./talend/jobs:/opt/airflow/talend_jobs
       - /var/run/docker.sock:/var/run/docker.sock
+      - shared_data:/shared_data
     user: "root"
     depends_on:
       - postgres
       - airflow-init
+      - init-shared
     command: ["webserver"]
-
+  
   airflow-scheduler:
     image: apache/airflow:2.10.5
     container_name: airflow-scheduler
@@ -68,33 +88,48 @@ services:
       - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
       - AIRFLOW_SKIP_GROUP_CHECK=true
+      - SHARED_DATA_DIR=/shared_data
+      - SHARED_INPUT_DIR=/shared_data/input
+      - SHARED_OUTPUT_DIR=/shared_data/output
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
       - airflow_data:/opt/airflow
       - ./talend/jobs:/opt/airflow/talend_jobs
       - /var/run/docker.sock:/var/run/docker.sock
+      - shared_data:/shared_data
     user: "root"
     depends_on:
       - postgres
       - airflow-init
+      - init-shared
     command: ["scheduler"]
-
+  
   talend-jobs:
     image: openjdk:11
     container_name: talend-jobs
     restart: always
+    environment:
+      - SHARED_DATA_DIR=/shared_data
+      - SHARED_INPUT_DIR=/shared_data/input
+      - SHARED_OUTPUT_DIR=/shared_data/output
     volumes:
       - ./talend/jobs:/jobs
+      - shared_data:/shared_data
     working_dir: /jobs
+    depends_on:
+      - init-shared
     command: ["tail", "-f", "/dev/null"]
-
+  
   mer_app:
     build: .
     container_name: mer_app
     user: "root"
     environment:
       - MONGODB_URI=mongodb+srv://salouaouissa:jD5IDdTVLoITMCpL@cluster0.nwqo9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      - SHARED_DATA_DIR=/shared_data
+      - SHARED_INPUT_DIR=/shared_data/input
+      - SHARED_OUTPUT_DIR=/shared_data/output
     ports:
       - "5000:5000"
       - "8081:8081"
@@ -103,15 +138,23 @@ services:
       - ./PFE:/app/mern/PFE
       - mer_app_node_modules:/app/mern/PFE/node_modules
       - frontend_node_modules:/app/mern/PFE/Frontend/node_modules
+      - shared_data:/shared_data
     working_dir: /app/mern/PFE
-    command: bash -c "npm install && cd Frontend && npm install -D esbuild@0.25.0 && cd .. && (node Backend/Server.js & cd Frontend && npm run dev -- --host 0.0.0.0 --port 8081)"
+    command: >
+      bash -c "npm install && 
+              cd Frontend && 
+              npm install -D esbuild@0.25.0 && 
+              cd .. && 
+              (node Backend/Server.js & cd Frontend && npm run dev -- --host 0.0.0.0 --port 8081)"
     depends_on:
       - postgres
       - airflow-webserver
+      - init-shared
 
 volumes:
   mer_app_node_modules:
-  frontend_node_modules:  
+  frontend_node_modules:
   postgres_data:
   airflow_data:
   airflow_plugins:
+  shared_data:

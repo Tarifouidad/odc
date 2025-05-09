@@ -8,7 +8,7 @@ import json
 import shutil
 import uuid
 
-# Définir les arguments par défaut
+# Default arguments
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
@@ -18,73 +18,118 @@ default_args = {
     'retry_delay': timedelta(minutes=5),
 }
 
-# Fonction pour télécharger le fichier d'entrée avec un identifiant unique
+# Function to download input file
 def download_input_file(**context):
-    """Télécharge le fichier Excel depuis l'URL fournie et lui assigne un ID unique"""
-    # Récupérer les données de configuration du DAG
     input_file_url = context['dag_run'].conf.get('input_file')
     file_id = context['dag_run'].conf.get('file_id', str(uuid.uuid4()))
+    formation_id = context['dag_run'].conf.get('formation_id')
     
     if not input_file_url:
-        raise ValueError("L'URL du fichier d'entrée est requise")
+        raise ValueError("Input file URL is required")
     
-    # Créer les répertoires si nécessaires
+    if not formation_id:
+        raise ValueError("Formation ID is required")
+    
+    # Create directories if necessary
     input_dir = "/opt/airflow/talend_jobs/input"
     os.makedirs(input_dir, exist_ok=True)
     
-    # Créer un nom de fichier unique basé sur l'ID du fichier
+    # Create unique filename based on file ID
     unique_filename = f"input_file_{file_id}.xlsx"
     local_path = f"{input_dir}/{unique_filename}"
     
-    # Télécharger le fichier
-    print(f"Téléchargement du fichier depuis {input_file_url}")
+    # Download file
+    print(f"Downloading file from {input_file_url}")
     response = requests.get(input_file_url)
     response.raise_for_status()
     
     with open(local_path, 'wb') as f:
         f.write(response.content)
     
-    print(f"Fichier téléchargé avec succès: {local_path}")
+    print(f"File downloaded successfully: {local_path}")
     
-    # Stocker les chemins pour les utiliser dans les tâches suivantes
+    # Store paths and IDs for use in subsequent tasks
     context['ti'].xcom_push(key='input_file_path', value=local_path)
     context['ti'].xcom_push(key='file_id', value=file_id)
+    context['ti'].xcom_push(key='formation_id', value=formation_id)
     context['ti'].xcom_push(key='unique_filename', value=unique_filename)
     
     return local_path
 
-# Fonction pour notifier l'application backend de l'état du traitement
+# Function to notify job completion
 def notify_job_completion(**context):
-    """Notifie l'application backend que le traitement est terminé"""
+    """Notifie l'application backend que le traitement est terminé et envoie les données pour stockage"""
     # Récupérer les données
     file_id = context['ti'].xcom_pull(key='file_id') or context['dag_run'].conf.get('file_id')
-    unique_filename = context['ti'].xcom_pull(key='unique_filename')
+    formation_id = context['ti'].xcom_pull(key='formation_id') or context['dag_run'].conf.get('formation_id')
     
     if not file_id:
         raise ValueError("L'ID du fichier est requis")
     
-    # Construire les chemins des fichiers
+    if not formation_id:
+        raise ValueError("L'ID de la formation est requis")
+    
+    # Build file paths with the new shared directory path
     output_filename = f"output_file_{file_id}.xlsx"
-    output_file = f"/opt/airflow/talend_jobs/output/{output_filename}"
     talend_output = "/opt/airflow/talend_jobs/JobETL/JobETL/outdataset.xlsx"
+    shared_output = f"/shared_data/output/{output_filename}"
     
-    # Vérifier si le fichier de sortie Talend existe
-    status = "completed" if os.path.exists(talend_output) else "error"
+    # Check if output file exists
+    talend_output_exists = os.path.exists(talend_output)
+    print(f"Checking if Talend output exists at {talend_output}: {talend_output_exists}")
     
-    # Si le traitement a réussi, copier le fichier vers le répertoire de sortie
+    # Check for alternative locations
+    alternative_locations = [
+        "/opt/airflow/talend_jobs/output/outdataset.xlsx",
+        "/opt/airflow/talend_jobs/CorrigeAge/JobETL/outdataset.xlsx",
+        "/opt/airflow/talend_jobs/CorrigeAge/outdataset.xlsx"
+    ]
+    
+    actual_output_file = None
+    if talend_output_exists:
+        actual_output_file = talend_output
+    else:
+        for location in alternative_locations:
+            if os.path.exists(location):
+                actual_output_file = location
+                print(f"Found alternative output file at: {location}")
+                break
+    
+    status = "completed" if actual_output_file else "error"
+    
+    # Copy file to shared directory if processing succeeded
     if status == "completed":
-        os.makedirs(os.path.dirname(output_file), exist_ok=True)
-        shutil.copy2(talend_output, output_file)
-        print(f"Fichier de sortie copié vers {output_file}")
+        try:
+            # Make directory if it doesn't exist
+            os.makedirs(os.path.dirname(shared_output), exist_ok=True)
+            
+            # Copy file
+            shutil.copy2(actual_output_file, shared_output)
+            print(f"Output file copied to shared location: {shared_output}")
+            
+            # Set permissions
+            os.chmod(shared_output, 0o777)
+            print(f"Set permissions on shared file to 777")
+            
+            # List files in directory to confirm
+            files_in_dir = os.listdir(os.path.dirname(shared_output))
+            print(f"Files in shared directory: {files_in_dir}")
+        except Exception as e:
+            print(f"Error copying file to shared location: {str(e)}")
+            status = "error"
+    else:
+        print(f"Error: No output file found in any known location")
     
-    # Préparer les données de notification
+    # Prepare notification data
     payload = {
         "status": status,
+        "fileId": file_id,
+        "formationId": formation_id,
         "result": {
             "outputFileUrl": f"/api/files/{file_id}/download" if status == "completed" else None,
             "outputFileName": output_filename if status == "completed" else None,
             "summary": {
-                "recordsProcessed": 100,  # À remplacer par le nombre réel si disponible
+                "recordsProcessed": 100,
                 "fileId": file_id,
                 "completedAt": datetime.now().isoformat()
             }
@@ -92,208 +137,212 @@ def notify_job_completion(**context):
     }
     
     if status == "error":
-        payload["error"] = "Erreur lors du traitement du fichier"
+        payload["error"] = "Error processing file"
     
-    # Envoyer la notification
+    # Send notification
     try:
-        print(f"Envoi de la notification pour le fichier {file_id}")
-        response = requests.post(
-            f"http://mer_app:5000/api/files/{file_id}/process-complete",
-            json=payload,
+        print(f"Sending notification for file {file_id}")
+        
+        # Send data for database storage
+        process_payload = {
+            "fileId": file_id,
+            "formationId": formation_id,
+            "outputFilePath": shared_output  # Full path to the shared file
+        }
+        
+        db_response = requests.post(
+            "http://mer_app:5000/api/beneficiaires/upload",
+            json=process_payload,
             headers={"Content-Type": "application/json"}
         )
-        response.raise_for_status()
-        print(f"Notification envoyée avec succès: {response.status_code}")
-        return f"Notification envoyée pour le fichier {file_id} avec statut {status}"
+        db_response.raise_for_status()
+        print(f"Data sent successfully to database: {db_response.status_code}")
+        
+        return f"Notification sent for file {file_id} with status {status}"
     except Exception as e:
-        print(f"Erreur lors de l'envoi de la notification: {str(e)}")
+        print(f"Error sending notification or storing data: {str(e)}")
         raise
 
-# Création du DAG
+# Create DAG
 with DAG(
     'process_excel_file',
     default_args=default_args,
-    description='Traite les fichiers Excel avec un identifiant unique pour chaque fichier',
+    description='Process Excel files with a unique ID for each file',
     schedule_interval=None,
     start_date=datetime(2025, 1, 1),
     catchup=False,
     tags=['talend', 'excel', 'beneficiaires'],
 ) as dag:
     
-    # Tâche pour créer les répertoires nécessaires
+    # Task to create necessary directories
     prepare_directories = BashOperator(
         task_id='prepare_directories',
         bash_command='''
-        # Créer les répertoires nécessaires avec des permissions complètes
+        # Create necessary directories with full permissions
         mkdir -p /opt/airflow/talend_jobs/input
         mkdir -p /opt/airflow/talend_jobs/output
         mkdir -p /opt/airflow/talend_jobs/logs
+        mkdir -p /shared_data/output
+        
         chmod -R 777 /opt/airflow/talend_jobs/input
         chmod -R 777 /opt/airflow/talend_jobs/output
         chmod -R 777 /opt/airflow/talend_jobs/logs
+        chmod -R 777 /shared_data
         
-        # Créer aussi des répertoires dans le conteneur Talend
+        # Create directories in Talend container
         docker exec talend-jobs mkdir -p /jobs/input
         docker exec talend-jobs mkdir -p /jobs/output
-        docker exec talend-jobs chmod -R 777 /jobs/input /jobs/output
+        docker exec talend-jobs mkdir -p /shared_data/output
+        docker exec talend-jobs chmod -R 777 /jobs/input /jobs/output /shared_data
         
-        echo "Répertoires préparés avec succès"
+        # Check volume mounts for debugging
+        echo "Checking volume mounts..."
+        df -h | grep "shared_data" || echo "No shared_data mount found in df output"
+        mount | grep "shared_data" || echo "No shared_data mount found in mount output"
+        
+        # List contents and permissions
+        echo "Shared directory contents and permissions:"
+        ls -la /shared_data/
+        ls -la /shared_data/output/ || echo "Output directory not found"
+        
+        echo "Directories prepared successfully"
         ''',
     )
     
-    # Tâche pour télécharger le fichier d'entrée
+    # Task to download input file
     download_file = PythonOperator(
         task_id='download_input_file',
         python_callable=download_input_file,
         provide_context=True,
     )
     
-    # Tâche pour copier le fichier dans le conteneur Talend
+    # Task to copy file to Talend container
     copy_to_talend = BashOperator(
         task_id='copy_to_talend',
         bash_command='''
-        # Récupérer le chemin du fichier d'entrée depuis XCom
+        # Get input file path from XCom
         INPUT_FILE="{{ ti.xcom_pull(key='input_file_path') }}"
         FILE_ID="{{ ti.xcom_pull(key='file_id') }}"
         UNIQUE_FILENAME="{{ ti.xcom_pull(key='unique_filename') }}"
         
-        echo "Copie du fichier $INPUT_FILE vers le conteneur Talend"
+        echo "Copying file $INPUT_FILE to Talend container"
         
-        # Copier le fichier vers le conteneur Talend
+        # Copy file to Talend container
         docker cp "$INPUT_FILE" talend-jobs:/jobs/input/"$UNIQUE_FILENAME"
         
-        # Vérifier que la copie a réussi
+        # Verify copy succeeded
         if docker exec talend-jobs ls -la /jobs/input/"$UNIQUE_FILENAME"; then
-            echo "Fichier copié avec succès"
+            echo "File copied successfully"
         else
-            echo "ERREUR: Échec de la copie du fichier"
+            echo "ERROR: File copy failed"
             exit 1
         fi
         ''',
     )
     
-    # Ajoute cette tâche avant run_talend_job
-    convert_file_format = BashOperator(
-        task_id='convert_file_format',
-        bash_command='''
-            # Installer les outils nécessaires
-            pip3 install pandas openpyxl xlwt --user >/dev/null 2>&1
-            
-            # Créer un script Python pour convertir le fichier
-            cat > /tmp/convert_excel.py << 'EOF'
-    import pandas as pd
-    import os
-    import sys
-
-    input_file = sys.argv[1]
-    output_file = input_file.replace('.xlsx', '.xls')
-
-    print(f"Converting {input_file} to {output_file}")
-    try:
-        # Lire le fichier XLSX
-        df = pd.read_excel(input_file)
-        print(f"Successfully read file with {len(df)} rows")
-        
-        # Écrire en format XLS
-        df.to_excel(output_file, engine='xlwt', index=False)
-        print(f"Successfully converted to XLS format")
-        
-        print("Conversion completed")
-    except Exception as e:
-        print(f"Error during conversion: {str(e)}")
-        sys.exit(1)
-    EOF
-            
-            # Exécuter la conversion dans le conteneur
-            docker exec talend-jobs mkdir -p /jobs/input
-            
-            # Définir les chemins de fichiers
-            XLSX_FILE="/opt/airflow/talend_jobs/input/{{ ti.xcom_pull(key='unique_filename') }}"
-            CONTAINER_XLSX="/jobs/input/{{ ti.xcom_pull(key='unique_filename') }}"
-            CONTAINER_XLS="/jobs/input/input_file_{{ ti.xcom_pull(key='file_id') }}.xls"
-            
-            # Copier le fichier XLSX dans le conteneur
-            docker cp "$XLSX_FILE" talend-jobs:"$CONTAINER_XLSX"
-            
-            # Exécuter le script de conversion
-            docker exec talend-jobs bash -c "python3 /tmp/convert_excel.py '$CONTAINER_XLSX'"
-            
-            echo "File format conversion completed"
-        ''',
-    )
-
-    # Modifie ta tâche run_talend_job pour utiliser le fichier XLS
+    # Task to run Talend job
     run_talend_job = BashOperator(
         task_id='run_talend_job',
         bash_command='''
-            # Récupérer les données depuis XCom
-            FILE_ID="{{ ti.xcom_pull(key='file_id') }}"
-            
-            # Utiliser le fichier XLS converti
-            INPUT_FILE="/jobs/input/input_file_${FILE_ID}.xlsx"
-            OUTPUT_DIR="/jobs/output"
-            LOG_FILE="/opt/airflow/talend_jobs/logs/job_${FILE_ID}_$(date +%Y%m%d%H%M%S).log"
-            
-            echo "Exécution du job Talend avec le fichier $INPUT_FILE"
-            
-            # Exécuter le job Talend
-            docker exec talend-jobs bash -c "cd /jobs/jobETL/jobETL && ./jobETL_run.sh --context_param input_file='$INPUT_FILE'" > "$LOG_FILE" 2>&1
-            JOB_EXIT_CODE=$?
-            
-            # Reste du code...
+        # Get data from XCom 
+        FILE_ID="{{ ti.xcom_pull(key='file_id') }}"
+        UNIQUE_FILENAME="{{ ti.xcom_pull(key='unique_filename') }}"
+        
+        # Define file paths
+        INPUT_FILE="/jobs/input/$UNIQUE_FILENAME"
+        LOG_FILE="/opt/airflow/talend_jobs/logs/job_${FILE_ID}_$(date +%Y%m%d%H%M%S).log"
+        
+        echo "Running Talend job with file $INPUT_FILE"
+        
+        # Run Talend job
+        docker exec talend-jobs bash -c "cd /jobs/JobETL/JobETL && ./JobETL_run.sh --context_param input_file='$INPUT_FILE'" > "$LOG_FILE" 2>&1
+        JOB_EXIT_CODE=$?
+        
+        if [ $JOB_EXIT_CODE -eq 0 ]; then
+            echo "Talend job completed successfully"
+        else
+            echo "ERROR: Talend job failed with exit code $JOB_EXIT_CODE"
+            cat "$LOG_FILE"
+            exit $JOB_EXIT_CODE
+        fi
         ''',
     )
-
     
-    # Tâche pour vérifier et copier les résultats
+    # Task to process results
     process_results = BashOperator(
         task_id='process_results',
         bash_command='''
-        # Récupérer l'ID du fichier depuis XCom
+        # Get file ID from XCom
         FILE_ID="{{ ti.xcom_pull(key='file_id') }}"
         
-        # Chemin du fichier de sortie dans Airflow
+        # Output file paths
         OUTPUT_FILE="/opt/airflow/talend_jobs/JobETL/JobETL/outdataset.xlsx"
-        OUTPUT_DESTINATION="/opt/airflow/talend_jobs/output/output_file_${FILE_ID}.xlsx"
+        SHARED_DESTINATION="/shared_data/output/output_file_${FILE_ID}.xlsx"
         
-        echo "Traitement du fichier de sortie pour le fichier ID: $FILE_ID"
+        echo "Processing output file for file ID: $FILE_ID"
         
-        # Vérifier si le fichier de sortie existe
+        # Check if output file exists
         if [ -f "$OUTPUT_FILE" ]; then
-            echo "Fichier de sortie trouvé: $OUTPUT_FILE"
+            echo "Output file found: $OUTPUT_FILE"
             
-            # Copier le fichier vers le répertoire de sortie avec l'ID unique
-            cp "$OUTPUT_FILE" "$OUTPUT_DESTINATION"
-            chmod 666 "$OUTPUT_DESTINATION"
+            # Create directory if it doesn't exist
+            mkdir -p "$(dirname "$SHARED_DESTINATION")"
             
-            echo "Fichier de sortie copié vers $OUTPUT_DESTINATION"
+            # Copy file to shared volume
+            cp "$OUTPUT_FILE" "$SHARED_DESTINATION"
+            chmod 777 "$SHARED_DESTINATION"
+            
+            echo "Output file copied to shared destination: $SHARED_DESTINATION"
+            
+            # Debug - list files in destination directory
+            echo "Files in shared directory:"
+            ls -la "$(dirname "$SHARED_DESTINATION")"
+            
+            # Also check if the file is accessible from mer_app container
+            echo "Checking file visibility from mer_app container:"
+            docker exec mer_app ls -la /shared_data/output/ || echo "Cannot access shared directory from mer_app"
+            
             exit 0
         else
-            echo "ERREUR: Fichier de sortie non trouvé dans $OUTPUT_FILE"
+            echo "ERROR: Output file not found at $OUTPUT_FILE"
             
-            # Chercher le fichier ailleurs
+            # Look for file elsewhere
+            echo "Searching for output file in alternative locations..."
             FOUND_FILE=$(find /opt/airflow/talend_jobs -name "outdataset.xlsx" -type f | head -1)
             
             if [ -n "$FOUND_FILE" ]; then
-                echo "Fichier trouvé dans un autre emplacement: $FOUND_FILE"
-                cp "$FOUND_FILE" "$OUTPUT_DESTINATION"
-                chmod 666 "$OUTPUT_DESTINATION"
-                echo "Fichier copié vers $OUTPUT_DESTINATION"
+                echo "File found at alternative location: $FOUND_FILE"
+                
+                # Create directory if it doesn't exist
+                mkdir -p "$(dirname "$SHARED_DESTINATION")"
+                
+                # Copy to shared volume
+                cp "$FOUND_FILE" "$SHARED_DESTINATION" 
+                chmod 777 "$SHARED_DESTINATION"
+                
+                echo "File copied to shared destination: $SHARED_DESTINATION"
+                
+                # Debug - list files in destination directory
+                echo "Files in shared directory:"
+                ls -la "$(dirname "$SHARED_DESTINATION")"
+                
                 exit 0
             else
-                echo "Aucun fichier de sortie trouvé"
+                echo "No output file found, checking entire talend_jobs directory..."
+                find /opt/airflow/talend_jobs -type f -name "*.xlsx" | grep -v "input"
+                echo "No output file found"
                 exit 1
             fi
         fi
         ''',
     )
     
-    # Tâche pour notifier l'application backend
+    # Task to notify backend application
     notify_completion = PythonOperator(
         task_id='notify_completion',
         python_callable=notify_job_completion,
         provide_context=True,
     )
     
-    # Définir l'ordre d'exécution des tâches
-    prepare_directories >> download_file >> copy_to_talend  >> run_talend_job >> process_results >> notify_completion
+    # Define task execution order
+    prepare_directories >> download_file >> copy_to_talend >> run_talend_job >> process_results >> notify_completion
